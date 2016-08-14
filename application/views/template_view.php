@@ -53,18 +53,24 @@
 		<?php $this->widget('breadcrumbs'); ?>
 		
 		<?php
-		if(isset($this->registry['error']))
+		if(!empty($this->registry['error']))
 		echo '<p class="uk-alert uk-alert-danger" data-uk-alert><i class="uk-close uk-close-alert"></i><i class="uk-icon-exclamation-circle"></i> ' . $this->registry['error'] . '</p>';
-		if(isset($this->registry['info']))
+		if(!empty($this->registry['info']))
 		echo '<p class="uk-alert" data-uk-alert><i class="uk-close uk-close-alert"></i><i class="uk-icon-info"></i> ' . $this->registry['info'] . '</p>';
 		?>
 		
 		<?php include 'application/views/'.$content_view; ?>
-		
+
 		<?php
-		if(isset($data)){
+		if(!empty($this->registry['debug'])){
+			echo '<span class="uk-margin-large-top uk-text-muted">debug</span>';
+			echo '<pre>';
+			var_dump($this->registry['debug']);
+			echo '</pre>';
+		}
+		if(!empty($data)){
 		?>
-			<span class="uk-margin-large-top uk-text-muted">var_dump($data);</h6>
+			<span class="uk-margin-large-top uk-text-muted">var_dump($data);</span>
 			<pre>
 			<?php
 			var_dump($data);

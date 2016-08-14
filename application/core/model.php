@@ -7,19 +7,34 @@ class Model
 	
 	function __construct($registry, $table_name = ''){
 		$this->registry = $registry;
+		if(empty($this->registry['model'])) {
+			$this->registry->set('model', $this);
+		}
 		$this->table_name = $table_name;
-		$this->db = new mysqli("localhost", "nemis206_tmp", "6LW{[!h_zJ?D", "nemis206_tmp");
-		if ($this->db->connect_error) {
-            die('Ошибка подключения (' . $this->db->connect_errno . ') '
-                . $this->db->connect_error);
+		if(empty($this->registry['db'])) {
+			$this->db = new mysqli("localhost", "nemis206_tmp", "6LW{[!h_zJ?D", "nemis206_tmp");
+			if ($this->db->connect_error) {
+				die('Ошибка подключения (' . $this->db->connect_errno . ') '
+					. $this->db->connect_error);
+			}
+			if (mysqli_connect_error()) {
+				die('Ошибка подключения (' . mysqli_connect_errno() . ') '
+					. mysqli_connect_error());
+			}
+			mysqli_set_charset($this->db, 'utf-8');
+			mysqli_query($this->db, "SET NAMES utf8");
+			mysqli_query($this->db, "Set session time_zone = '+2:00'");
+			$this->registry->set('db', $this->db);
+		} else {
+			$this->db = $this->registry['db'];
 		}
-		if (mysqli_connect_error()) {
-			die('Ошибка подключения (' . mysqli_connect_errno() . ') '
-				. mysqli_connect_error());
-		}
-		mysqli_set_charset($this->db, 'utf-8');
-		mysqli_query($this->db,"SET NAMES utf8");
-		mysqli_query($this->db,"Set session time_zone = '+2:00'");
+	}
+	
+	function get_table_name(){
+		if(!empty($this->table_name))
+			return $this->table_name;
+		else
+			return false;
 	}
 
 	function get_data($user_id){ // default data for index page

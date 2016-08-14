@@ -2,16 +2,23 @@
 class Widget_Table extends Widget{
 	private $data;
 	private $tableClass;
-	
+	private $filters;
+
 	function __construct($params, $registry){
 		$this->data = $params['data'];
-		if(isset($params['tableClass']))
+		if(!empty($params['tableClass']))
 			$this->tableClass = $params['tableClass'];
+		if(!empty($params['filters']))
+			$this->filters = $params['filters'];
 		parent::__construct($params, $registry);
 	}
 	
 	function display(){
+		$this->filters();
 		$columns = $this->data['fields'];
+		if(is_array($this->tableClass))
+			$this->tableClass = implode(' ', $this->tableClass);
+		$this->tableClass .= ' ' . strtolower($this->registry['controller_name']) . '-table';
 		$output = '<table class="'.$this->tableClass.'">';
 		if($columns){
 			$output .= '<thead><tr>';
@@ -73,7 +80,6 @@ class Widget_Table extends Widget{
 					} else
 						$output .= '<td class="' . $td_class . '">' . $cell . '</td>';
 				}
-				$index = 0;
 				$output .= '</tr>';
 			}
 			$output .= '</tbody>';
@@ -82,6 +88,38 @@ class Widget_Table extends Widget{
 		if(count($this->data['items']) == 0)
 			$output .= '<p class="uk-alert" data-uk-alert><a href="" class="uk-alert-close uk-close"></a>Таблиця пуста</p>';
 		echo $output;
+	}
+
+	function filters(){
+		if(empty($this->filters))
+			return;
+		echo '<form action="' . $this->registry['controller_name'] . '/index" method="post" class="uk-form">';
+		$table_name = $this->registry['model']->get_table_name();
+		foreach($this->filters as $filter){
+			echo $filter . ' <select name="' . $filter . '">';
+			echo '<option>Всі</option>';
+			$query = 'SELECT ' . $filter;
+			if($filter == 'created_by')
+				$query .= ', u.name';
+			$query .= ' FROM ' . $table_name;
+			if($filter == 'created_by'){
+				$query .= ' INNER JOIN users AS u ON u.id=' . $filter;
+			}
+			$query .= ' WHERE published=1 AND trashed=0';
+			$values = $this->registry['db']->query($query);
+			if(!empty($values)) {
+				while ($row = $values->fetch_array()) {
+					echo '<option value="' . $row[0] . '">';
+					if ($filter == 'created_by')
+						echo $row[1] . ' [' . $row[0] . ']';
+					else
+						echo $row[0];
+					echo '</option>';
+				}
+			}
+			echo '</select>';	
+		}
+		echo '<form>';
 	}
 	
 	function display_events($events){

@@ -1,7 +1,7 @@
 <?php
 Class Registry Implements ArrayAccess {
 	private $vars = array();
-	public $errors = array();
+	public $errors = array(); 
 	
 	function set($key, $var) {
 		if (isset($this->vars[$key]) == true) {
@@ -19,7 +19,7 @@ Class Registry Implements ArrayAccess {
 	}
 
 
-	function remove($var) {
+	function remove($key) {
 		unset($this->vars[$key]);
 	}
 	
