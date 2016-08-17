@@ -4,6 +4,7 @@ class Widget_Toolbar{
 	private $registry;
 	
 	function __construct($params, $registry){
+		$this->registry = $registry;
 		/*
 		 * $params = array - contains rules for buttons.
 		 * 		For example: Array('add'=>'0', 'remove'=>'1')
@@ -11,7 +12,7 @@ class Widget_Toolbar{
 		$this->params['actions'] = array(
 			'view'=>'1', 
 			'add'=>'1',  
-			'add_to_google'=>'1', 
+			'add_to_google'=>'1',
 			'trash'=>'1',
 			'delete'=>'1', 
 			'publish'=>'1', 
@@ -22,6 +23,10 @@ class Widget_Toolbar{
 			foreach($params as $key=>$value){
 				$this->params['actions'][$key] = $value;
 			}
+		}
+		$google = $this->registry['google'];
+		if(!$google->get_user()){
+			$this->params['actions']['add_to_google'] = 0;
 		}
 		$icons = array(
 			'view'=>'th-list', 
@@ -40,7 +45,6 @@ class Widget_Toolbar{
 				$this->params['icons'][$key] = $value;
 			}
 		}
-		$this->registry = $registry;
 	}
 	
 	function check_controller(){

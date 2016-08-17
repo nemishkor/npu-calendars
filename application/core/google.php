@@ -19,8 +19,49 @@ class Google extends Model{
 		$this->client->setClientSecret('UsDxl_J2KQIztYcS8YCLqMYf');
 		$this->client->setRedirectUri( $redirect_uri );
 		$this->client->setScopes(array('https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/calendar'));
+		$this->client->setAccessType('offline');
 	}
-	
+
+	function logout(){
+		unset($_SESSION['access_token']);
+		$this->db->query("UPDATE {$this->table_name} SET hash=NULL WHERE hash=null");
+	}
+
+	function login(){
+		$data = Array();
+		if (isset($_REQUEST['logout'])) {
+			$this->logout();
+		}
+		if (isset($_GET['code'])) {
+			$this->client->authenticate($_GET['code']);
+			$_SESSION['access_token'] = $this->client->getAccessToken();
+			header('Location: ' . filter_var('http://' . $_SERVER['HTTP_HOST'] . '/user/login', FILTER_SANITIZE_URL));
+		}
+		if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
+			$data['access_token'] = $_SESSION['access_token'];
+			$this->client->setAccessToken($_SESSION['access_token']);
+		} else {
+			$data['authUrl'] = $this->client->createAuthUrl();
+		}
+
+		if ($this->client->getAccessToken()){
+			$_SESSION['access_token'] = $this->client->getAccessToken();
+			$data['token_data'] = $this->client->verifyIdToken()->getAttributes();
+			// db users
+			$access_token = json_decode($data["access_token"], true);
+			$google_id = $data['token_data']['payload']['sub'];
+			$email = $data['token_data']['payload']['email'];
+			$hash = $access_token["access_token"];
+			$is_new = !$this->check_user_exist($email);
+			if($is_new)
+				$this->register_user($google_id, $email, $hash);
+			else
+				$this->update_hash($email, $hash);
+			$data['user'] = Array('isNew' => $is_new, 'email' => $email);
+		}
+		return $data;
+	}
+
 	function register_user($google_id, $email, $hash){
 		$this->db->query("INSERT INTO {$this->table_name} (google_id, email, hash) VALUES ('{$google_id}', '{$email}', '{$hash}')");
 	}
@@ -35,7 +76,7 @@ class Google extends Model{
 			return true;
 		else
 			return false; 
-	} 
+	}
 	
 	function get_user(){
 		if(isset($_SESSION['access_token']) && $_SESSION['access_token']){
@@ -128,48 +169,6 @@ class Google extends Model{
 		return false;
 	}
 	
-	function logout(){
-		unset($_SESSION['access_token']);
-		$this->db->query("UPDATE {$this->table_name} SET hash=NULL WHERE hash=null");
-	}
-	
-	function login(){
-		$data = Array();
-		if (isset($_REQUEST['logout'])) {
-			$this->logout();
-		}
-		if (isset($_GET['code'])) {
-		    $this->client->authenticate($_GET['code']);
-		    $_SESSION['access_token'] = $this->client->getAccessToken();
-		    header('Location: ' . filter_var('http://' . $_SERVER['HTTP_HOST'] . '/user/login', FILTER_SANITIZE_URL));
-		}
-		if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-			$data['access_token'] = $_SESSION['access_token'];
-		    $this->client->setAccessToken($_SESSION['access_token']);
-		} else {
-		    $data['authUrl'] = $this->client->createAuthUrl();
-		}
-
-		if ($this->client->getAccessToken()){
-			$_SESSION['access_token'] = $this->client->getAccessToken();
-			echo date('e T O') . '<br>';
-			echo time() . '<hr>';
-			$data['token_data'] = $this->client->verifyIdToken()->getAttributes();
-			// db users
-			$access_token = json_decode($data["access_token"], true);
-			$google_id = $data['token_data']['payload']['sub'];
-			$email = $data['token_data']['payload']['email'];
-			$hash = $access_token["access_token"];
-			$is_new = !$this->check_user_exist($email);
-			if($is_new)
-				$this->register_user($google_id, $email, $hash);
-			else
-				$this->update_hash($email, $hash);
-			$data['user'] = Array('isNew' => $is_new, 'email' => $email);
-		}
-		return $data;
-	}
-	
 	function addCalendar($id = null){
 		//~ if(!$id)
 			//~ return false;
@@ -207,7 +206,7 @@ class Google extends Model{
 
 			$calendarId = 'primary';
 			$event = $service->events->insert($calendarId, $event);
-			$data("Event created:", $event->htmlLink);
+//			$data("Event created:", $event->htmlLink);
 		} else {
 		    $data['authUrl'] = $this->client->createAuthUrl();
 		}

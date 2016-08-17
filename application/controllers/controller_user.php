@@ -7,13 +7,18 @@ class Controller_User extends Crud_Controller{
 			$data = $this->model->get_data($user['id']);
 		    $this->view->generate($this->view_file_name, 'template_view.php', $data);
 		} else {
-			$this->view->generate('user_login_view.php', 'template_view.php', $data);
+//			$this->view->generate('user_login_view.php', 'template_view.php', $data);
+			header('Location:/user/login');
 		}
 	}
-	
+
 	function action_login(){
 		$data = $this->google->login();
-		$this->view->generate('calendars_login.php', 'template_view.php', $data);
+		if (!empty($data['authUrl'])) {
+			$this->view->generate('user_login_view.php', 'template_view.php', $data);
+		} else {
+			header('Location: http://'. $_SERVER['HTTP_HOST'] . '/user/index');
+		}
 	}
 	
 	 

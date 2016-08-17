@@ -3,6 +3,10 @@ class Controller_Calendars extends Crud_Controller
 {
 	function action_index()
 	{
+		if(isset($_GET['test'])) {
+			echo 'test1';
+			$this->test();
+		}
 		if(!empty($_POST['created_by']))
 			$user_id = $_POST['created_by'];
 		else {
@@ -11,6 +15,34 @@ class Controller_Calendars extends Crud_Controller
 		}
 		$data = $this->model->get_data($user_id);
 		$this->view->generate($this->view_file_name, 'template_view.php', $data);
+	}
+
+	function test(){
+		echo 'test2';
+		$google = $this->registry['google'];
+		$service = new Google_Service_Calendar($google->client);
+
+		$calendarId = 'primary';
+		$optParams = array(
+			'maxResults' => 10,
+			'orderBy' => 'startTime',
+			'singleEvents' => TRUE,
+			'timeMin' => date('c'),
+		);
+		$results = $service->events->listEvents($calendarId, $optParams);
+
+		if (count($results->getItems()) == 0) {
+			echo "No upcoming events found.<br>";
+		} else {
+			echo "Upcoming events:<br>";
+			foreach ($results->getItems() as $event) {
+				$start = $event->start->dateTime;
+				if (empty($start)) {
+					$start = $event->start->date;
+				}
+				echo $event->getSummary() . '(' . $start . ')<br>';
+			}
+		}
 	}
 
 	function action_edit(){

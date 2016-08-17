@@ -1,15 +1,8 @@
-<?php
-?>
-
 <div class="box">
 	<div class="request">
-		<?php
-		if (isset($data['authUrl'])) {
-			echo "<a class='login' href='" . $data['authUrl'] . "'>Connect Me!</a>";
-		} else {
-			echo "<a class='logout' href='/calendars/login?logout'>Logout</a>";
-		}
-		?>
+		<a class='login' href='<?php echo $data['authUrl']; ?>'>Connect Me!</a>
 	</div>
 </div>
+
+
 
