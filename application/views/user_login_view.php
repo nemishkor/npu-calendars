@@ -1,8 +1,6 @@
-<div class="box">
-	<div class="request">
-		<a class='login' href='<?php echo $data['authUrl']; ?>'>Connect Me!</a>
-	</div>
-</div>
+<a class='uk-button uk-button-large uk-button-primary' href='/user/login'>
+	<i></i> Войти через Google
+</a>
 
 
 

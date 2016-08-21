@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/google/vendor/autoload.php';
 require_once __DIR__ . '/model.php';
-
+ 
 class Google extends Model{
 	
 	public $client;
@@ -9,79 +9,25 @@ class Google extends Model{
 	
 	function __construct($registry, $table_name){
 		parent::__construct($registry, $table_name);
-		session_start(); 
-		//~ $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/oauth2callback.php';
-		$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/user/login';
+		session_start();
 		$this->client = new Google_Client();
 		$this->client->setApplicationName("NewPage Calendars");
 		$this->client->setDeveloperKey("AIzaSyCnoWnA1tiP9ke7LwqlcXvbx3BRYnuv9jI");
 		$this->client->setClientId('712448737249-etsol9rup6n05dnpamqq5rgsnlmq90kh.apps.googleusercontent.com');
 		$this->client->setClientSecret('UsDxl_J2KQIztYcS8YCLqMYf');
-		$this->client->setRedirectUri( $redirect_uri );
-		$this->client->setScopes(array('https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/calendar'));
+		$this->client->addScope('email');
+		$this->client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
 		$this->client->setAccessType('offline');
-	}
-
-	function logout(){
-		unset($_SESSION['access_token']);
-		$this->db->query("UPDATE {$this->table_name} SET hash=NULL WHERE hash=null");
-	}
-
-	function login(){
-		$data = Array();
-		if (isset($_REQUEST['logout'])) {
-			$this->logout();
-		}
-		if (isset($_GET['code'])) {
-			$this->client->authenticate($_GET['code']);
-			$_SESSION['access_token'] = $this->client->getAccessToken();
-			header('Location: ' . filter_var('http://' . $_SERVER['HTTP_HOST'] . '/user/login', FILTER_SANITIZE_URL));
-		}
-		if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-			$data['access_token'] = $_SESSION['access_token'];
+		$this->client->setRedirectUri('http://' . $_SERVER['HTTP_HOST'] . '/user/oauth2callback');
+		if (!empty($_SESSION['access_token']) && isset($_SESSION['access_token']['id_token'])) {
 			$this->client->setAccessToken($_SESSION['access_token']);
-		} else {
-			$data['authUrl'] = $this->client->createAuthUrl();
 		}
-
-		if ($this->client->getAccessToken()){
-			$_SESSION['access_token'] = $this->client->getAccessToken();
-			$data['token_data'] = $this->client->verifyIdToken()->getAttributes();
-			// db users
-			$access_token = json_decode($data["access_token"], true);
-			$google_id = $data['token_data']['payload']['sub'];
-			$email = $data['token_data']['payload']['email'];
-			$hash = $access_token["access_token"];
-			$is_new = !$this->check_user_exist($email);
-			if($is_new)
-				$this->register_user($google_id, $email, $hash);
-			else
-				$this->update_hash($email, $hash);
-			$data['user'] = Array('isNew' => $is_new, 'email' => $email);
-		}
-		return $data;
 	}
 
-	function register_user($google_id, $email, $hash){
-		$this->db->query("INSERT INTO {$this->table_name} (google_id, email, hash) VALUES ('{$google_id}', '{$email}', '{$hash}')");
-	}
-	
-	function update_hash($email, $hash){
-		$this->db->query("UPDATE {$this->table_name} SET hash='{$hash}' WHERE email='{$email}'");
-	}
-	
-	function check_user_exist($email){
-		$result = $this->db->query("SELECT * FROM {$this->table_name} WHERE email='{$email}'");
-		if($result->num_rows)
-			return true;
-		else
-			return false; 
-	}
-	
 	function get_user(){
 		if(isset($_SESSION['access_token']) && $_SESSION['access_token']){
-			$access_token = json_decode($_SESSION['access_token']);
-			$query = "SELECT * FROM {$this->table_name} WHERE hash='{$access_token->access_token}'";
+			$access_token = $_SESSION['access_token'];
+			$query = "SELECT * FROM {$this->table_name} WHERE hash='{$access_token['access_token']}'";
 			$result = $this->db->query($query);
 			$user = $result->fetch_assoc();
 			return $user;

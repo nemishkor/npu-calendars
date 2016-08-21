@@ -26,6 +26,20 @@ class Model_User extends Model{
 		} else
 			return false;
 	}
+
+	function get_user(){
+		if(!empty($_SESSION['access_token'])){
+			$access_token = $_SESSION['access_token'];
+			$query = "SELECT * FROM {$this->table_name} WHERE hash='{$access_token['access_token']}'";
+			$result = $this->db->query($query);
+			$user = $result->fetch_assoc();
+			return $user;
+		} else {
+			return false;
+		}
+	}
+
+	
 	
 	function get_item_from_form(){
 		$google = $this->registry['google'];
@@ -33,6 +47,22 @@ class Model_User extends Model{
 		$params = array("dual_week"=>$_POST['dual_week']);
 		$item = array('id'=>$user['id'], 'name'=>$_POST['name'], 'params'=>json_encode($params));
 		return $item;
+	}
+
+	function register_user($google_id, $email, $hash){
+		$this->db->query("INSERT INTO {$this->table_name} (google_id, email, hash) VALUES ('{$google_id}', '{$email}', '{$hash}')");
+	}
+
+	function update_hash($email, $hash){
+		$this->db->query("UPDATE {$this->table_name} SET hash='{$hash}' WHERE email='{$email}'");
+	}
+
+	function check_user_exist($email){
+		$result = $this->db->query("SELECT * FROM {$this->table_name} WHERE email='{$email}'");
+		if($result->num_rows)
+			return true;
+		else
+			return false;
 	}
 		
 }

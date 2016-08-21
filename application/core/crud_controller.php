@@ -9,10 +9,6 @@ class Crud_Controller extends Controller{
 		$this->model = new $model_name($registry);
 		$this->view_file_name = strtolower($registry['controller_name']) . '_' . $registry['action_name'] . '_view.php';
 		parent::__construct($registry);
-		if ($this->google->client->getAccessToken()){
-			$_SESSION['access_token'] = $this->google->client->getAccessToken();
-			$data['token_data'] = $this->google->client->verifyIdToken()->getAttributes();
-		}
 	}
 		
 	function action_index()

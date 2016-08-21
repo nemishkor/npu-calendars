@@ -42,7 +42,7 @@
 			</ul>
 			<div class="uk-float-right">
 				<?php
-				$this->widget('login');
+//				$this->widget('login');
 				?>
 			</div>
 
