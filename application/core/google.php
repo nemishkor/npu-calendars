@@ -1,11 +1,14 @@
 <?php
 require_once __DIR__ . '/google/vendor/autoload.php';
+require_once __DIR__ . '/google/src/Google/Client.php';
+require_once __DIR__ . '/google/vendor/google/apiclient-services/Google/Service/Calendar.php';
 require_once __DIR__ . '/model.php';
  
 class Google extends Model{
 	
 	public $client;
 	public $redirect_uri;
+	public $user_data;
 	
 	function __construct($registry, $table_name){
 		parent::__construct($registry, $table_name);
@@ -16,11 +19,15 @@ class Google extends Model{
 		$this->client->setClientId('712448737249-etsol9rup6n05dnpamqq5rgsnlmq90kh.apps.googleusercontent.com');
 		$this->client->setClientSecret('UsDxl_J2KQIztYcS8YCLqMYf');
 		$this->client->addScope('email');
-		$this->client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
+        $this->client->addScope(Google_Service_Calendar::CALENDAR);
 		$this->client->setAccessType('offline');
 		$this->client->setRedirectUri('http://' . $_SERVER['HTTP_HOST'] . '/user/oauth2callback');
 		if (!empty($_SESSION['access_token']) && isset($_SESSION['access_token']['id_token'])) {
 			$this->client->setAccessToken($_SESSION['access_token']);
+			$this->user_data = $this->client->verifyIdToken();
+		} else {
+			$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/user/index';
+			header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 		}
 	}
 

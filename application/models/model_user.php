@@ -28,18 +28,23 @@ class Model_User extends Model{
 	}
 
 	function get_user(){
-		if(!empty($_SESSION['access_token'])){
-			$access_token = $_SESSION['access_token'];
-			$query = "SELECT * FROM {$this->table_name} WHERE hash='{$access_token['access_token']}'";
-			$result = $this->db->query($query);
-			$user = $result->fetch_assoc();
-			return $user;
-		} else {
-			return false;
-		}
+		if(empty($_SESSION['access_token']))
+		    return false;
+        $access_token = $_SESSION['access_token'];
+        $query = "SELECT * FROM {$this->table_name} WHERE hash='{$access_token['access_token']}'";
+        $result = $this->db->query($query);
+        $user = $result->fetch_assoc();
+        return $user;
 	}
 
-	
+	function get_user_group($group_id = null){
+		if(is_null($group_id))
+		    return false;
+        $query = "SELECT * FROM users_groups WHERE id={$group_id}";
+        $result = $this->db->query($query);
+        $group = $result->fetch_assoc();
+        return $group;
+	}
 	
 	function get_item_from_form(){
 		$google = $this->registry['google'];

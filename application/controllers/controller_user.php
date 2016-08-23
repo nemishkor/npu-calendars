@@ -9,7 +9,6 @@ class Controller_User extends Crud_Controller{
 			unset($_SESSION['access_token']);
 		}
 		if (!empty($_SESSION['access_token']) && isset($_SESSION['access_token']['id_token'])) {
-			var_dump($_SESSION["access_token"]);
 			$data = array();
 			$data['user_data'] = $google->client->verifyIdToken();
 			// db users
@@ -22,6 +21,7 @@ class Controller_User extends Crud_Controller{
 			else
 				$this->model->update_hash($email, $hash);
 			$data['user'] = $this->model->get_user();
+			$data['user_group'] = $this->model->get_user_group($data['user']['group_id']);
 			$data['isNew'] = $is_new;
 			$google->client->setAccessToken($_SESSION['access_token']);
 		    $this->view->generate($this->view_file_name, 'template_view.php',  $data);
