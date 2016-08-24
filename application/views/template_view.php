@@ -9,7 +9,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 	<script src="/js/uikit.js"></script>
 	<link rel="stylesheet" href="/css/uikit.almost-flat.css">
-	
+	<link rel="stylesheet" href="/css/style.css">
+
 	<link rel="stylesheet" href="/css/components/form-advanced.almost-flat.css">
 	
 	<script src="/js/components/accordion.js"></script>

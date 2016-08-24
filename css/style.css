@@ -1,0 +1,10 @@
+/* calendars */
+.access-role-reader{
+    color: #999;
+}
+.access-role-reader:after{
+    content: " - читач";
+}
+.acces-role-owner:after{
+    content: " - власник";
+}

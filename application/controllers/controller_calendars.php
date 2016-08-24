@@ -13,20 +13,6 @@ class Controller_Calendars extends Crud_Controller
 		$this->view->generate($this->view_file_name, 'template_view.php', $data);
 	}
 
-	function test(){
-		$google = $this->registry['google'];
-
-//		$calendarId = 'primary';
-//		$optParams = array(
-//			'maxResults' => 10,
-//			'orderBy' => 'startTime',
-//			'singleEvents' => TRUE,
-//			'timeMin' => date('c'),
-//		);
-//		$results = $service->events->listEvents($calendarId, $optParams);
-
-	}
-
 	function action_edit(){
 		// saving
 		if(isset($_POST['action'])){
@@ -55,10 +41,15 @@ class Controller_Calendars extends Crud_Controller
 	function action_add_to_google(){
 		$data = array();
 		if(isset($_GET['id']) && $_GET['id']){
+			$calendar = $this->model->get_calendar($_GET['id']);
+			$g_calendar_name = ($calendar['name'] == '') ? 'Немає імені' : $calendar['name'];
 			$google = $this->registry['google'];
 			$service = new Google_Service_Calendar($google->client);
-			$user_calendars = $service->calendars;
-			$this->registry->set('debug',$user_calendars);
+			$g_calendar = new Google_Service_Calendar_Calendar();
+			$g_calendar->setSummary($g_calendar_name);
+			$g_calendar->setTimeZone('Europe/Kiev');
+			$createdCalendar = $service->calendars->insert($g_calendar);
+			$this->registry->set('debug', $createdCalendar);
 		}
 		$this->view->generate($this->view_file_name, 'template_view.php', $data);
 	}

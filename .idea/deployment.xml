@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="ftp.newpage.in.ua" autoUploadExternalChanges="true" compareModeInSync="TIMESTAMP">
+  <component name="PublishConfigData" autoUpload="Always" serverName="tmp.newpage.in.ua" autoUploadExternalChanges="true" compareModeInSync="TIMESTAMP">
     <serverData>
-      <paths name="ftp.newpage.in.ua">
+      <paths name="tmp.newpage.in.ua">
         <serverdata>
           <mappings>
             <mapping deploy="/" local="$PROJECT_DIR$" web="/" />

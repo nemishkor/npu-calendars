@@ -7,6 +7,26 @@ class Model_Calendars extends Model
 		parent::__construct($registry, $table_name);
 	}	
 	
+	function get_data($user_id)
+	{
+		$data = array();
+		$google = $this->registry['google'];
+		$calendar_service = new Google_Service_Calendar($google->client);
+		$data['user'] = $google->get_user();
+		$data['user_calendars'] = parent::get_data($user_id);
+		if($data['user'])
+			$data['google_calendars'] = $calendar_service->calendarList->listCalendarList();
+		if(!$data['user'] || $data['user']['id'] != $user_id) {
+			$query = "SELECT name FROM users WHERE id={'$user_id'}";
+			$result = $this->db->query($query);
+			if($result) {
+				$user_name = $result->fetch_assoc();
+				$data['user_calendars']['user_name'] = $user_name['name'];
+			}
+		}
+		return $data;
+	}
+
 	function create(){
 		$item = $this->get_item_from_form();
 		$query = "INSERT INTO `{$this->table_name}` VALUES(NULL, '{$item['name']}', '{$item['published']}', '0', now(), '{$item['created_by']}', '{$item['events']}')";
@@ -163,6 +183,17 @@ class Model_Calendars extends Model
 		$google = $this->registry['google'];
 		$user = $google->get_user();
 		$query = "SELECT * FROM calendars WHERE id={$id} AND created_by='{$user[id]}'";
+		$result = $this->db->query($query);
+		if($result){
+			$calendar = $result->fetch_assoc();
+			$calendar['events'] = json_decode($calendar['events']);
+			return $calendar;
+		}
+		return null;
+	}
+
+	function get_calendar($id){
+		$query = "SELECT * FROM calendars WHERE id={$id}";
 		$result = $this->db->query($query);
 		if($result){
 			$calendar = $result->fetch_assoc();

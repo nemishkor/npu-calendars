@@ -49,7 +49,11 @@ class Model
 				$row['link'] = $this->registry['host'] . $this->registry['controller_name'] .'/edit?id=' . $row['id'];
 			$items[] = $row;
 		}
-		$data = array('fields'=>$result->fetch_fields(), 'items'=>$items);
+		$data = array(
+			'parameters'=>array('user_id'=>$user_id),
+			'fields'=>$result->fetch_fields(),
+			'items'=>$items
+		);
 		return $data;
 	}
 	

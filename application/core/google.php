@@ -26,8 +26,10 @@ class Google extends Model{
 			$this->client->setAccessToken($_SESSION['access_token']);
 			$this->user_data = $this->client->verifyIdToken();
 		} else {
-			$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/user/index';
-			header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
+			if($this->registry['controller_name'] != 'user') {
+				$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/user/index';
+				header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
+			}
 		}
 	}
 
