@@ -71,10 +71,10 @@ if($data['google_calendars']){
 					   data-uk-tooltip> - власник</span>';
 					} elseif($item['accessRole'] == 'reader') {
 						echo '<span class="uk-text-muted" title="Ви не можете редагувати цей календар"
-					   data-uk-tooltip> - читач</span>';
+					   data-uk-tooltip>читач</span>';
 					} else {
-						echo '<span class="uk-text-muted" title="Ви не можете редагувати цей календар"
-					   data-uk-tooltip> - читач</span>';
+						echo '<span class="uk-text-muted" title="unknown accessRole"
+					   data-uk-tooltip>?</span>';
 					}
 					?>
 				</td>

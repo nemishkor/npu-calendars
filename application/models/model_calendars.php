@@ -202,6 +202,15 @@ class Model_Calendars extends Model
 		}
 		return null;
 	}
+
+	function set_g_calendar($id, $g_id){
+		$query = "UPDATE calendars SET g_calendar_id={$g_id} WHERE id={$id}";
+		$result = $this->db->query($query);
+		if($result)
+			return true;
+		else
+			return false;
+	}
 	
 }
 ?>
