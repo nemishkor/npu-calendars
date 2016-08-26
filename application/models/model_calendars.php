@@ -29,7 +29,7 @@ class Model_Calendars extends Model
 
 	function create(){
 		$item = $this->get_item_from_form();
-		$query = "INSERT INTO `{$this->table_name}` VALUES(NULL, '{$item['name']}', '{$item['published']}', '0', now(), '{$item['created_by']}', '{$item['events']}')";
+		$query = "INSERT INTO `{$this->table_name}` VALUES(NULL, '{$item['name']}', '{$item['published']}', '0', now(), '{$item['created_by']}', '{$item['events']}', NULL, '{$item['timezone']}')";
 		//~ echo $query . '<br>';
 		$result = $this->db->query($query);
 		if($result){
@@ -40,7 +40,7 @@ class Model_Calendars extends Model
 	
 	function save(){
 		$item = $this->get_item_from_form();
-		$query = "UPDATE {$this->table_name} SET name='{$item['name']}', published='{$item['published']}', events='{$item['events']}', dual_week='{$item['dual_week']}' WHERE id='{$item['id']}'";
+		$query = "UPDATE {$this->table_name} SET name='{$item['name']}', published='{$item['published']}', events='{$item['events']}', dual_week='{$item['dual_week']}', timezone='{$item['timezone']}' WHERE id='{$item['id']}'";
 		//~ echo $query . '<br>';
 		$result = $this->db->query($query);
 		if($result){
@@ -53,7 +53,14 @@ class Model_Calendars extends Model
 		$google = $this->registry['google'];
 		$user = $google->get_user();
 		$dual_week = ($_POST['dual_week']) ? '1' : '0';
-		$item = array('name'=>$_POST['name'], 'created_by'=>$user['id'], 'published'=>$_POST['published'], 'events'=>$_POST['events'], 'dual_week'=>$dual_week);
+		$item = array(
+		    'name'      => $_POST['name'],
+            'created_by'=> $user['id'],
+            'published' => $_POST['published'],
+            'events'    => $_POST['events'],
+            'dual_week' => $dual_week,
+            'timezone'  => $_POST['timezone'],
+        );
 		if(isset($_POST['id']) && $_POST['id'])
 			$item['id'] = $_POST['id'];
 		return $item;
@@ -204,13 +211,36 @@ class Model_Calendars extends Model
 	}
 
 	function set_g_calendar($id, $g_id){
-		$query = "UPDATE calendars SET g_calendar_id={$g_id} WHERE id={$id}";
+		$query = "UPDATE calendars SET g_calendar_id='{$g_id}' WHERE id='{$id}'";
 		$result = $this->db->query($query);
 		if($result)
 			return true;
 		else
 			return false;
 	}
-	
+
+    function get_g_calendar($id){
+        $query = "SELECT g_calendar_id FROM calendars WHERE id='{$id}'";
+        $result = $this->db->query($query);
+        if($result) {
+            $calendar = $result->fetch_assoc();
+            return $calendar['g_calendar_id'];
+        } else
+            return false;
+    }
+
+    function delete_g_calendar($id){
+        $g_calendar_id = $this->get_g_calendar($id);
+        if ($g_calendar_id) {
+            $query = "UPDATE calendars SET g_calendar_id=NULL WHERE id='{$id}'";
+            $result = $this->db->query($query);
+            if($result) {
+                return $g_calendar_id;
+            } else
+                return false;
+        } else
+            return false;
+    }
+
 }
 ?>

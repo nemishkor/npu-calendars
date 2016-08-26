@@ -5987,6 +5987,9 @@ a.uk-badge:hover {
 .uk-badge-danger {
   background-color: #da314b;
 }
+.uk-badge-muted{
+  background-color: transparent;
+}
 /* ========================================================================
    Component: Alert
  ========================================================================== */

@@ -1,10 +1,13 @@
-<h1><i class="uk-icon-google"></i>&nbsp;Календар <?php echo ($data['calendar']['name']) ? $data['calendar']['name'] : '[немає імені]'; ?></h1>
 <div class="uk-grid">
     <div class="uk-width-1-1 uk-width-medium-1-2">
         <ul class="uk-list uk-list-line">
             <li class="uk-text-small uk-text-muted">
                 <span class="uk-text-bold">id: </span>
                 <?php echo $data['calendar']['id']; ?>
+            </li>
+            <li>
+                <span class="uk-text-bold">Назва: </span>
+                <?php echo ($data['calendar']['name']) ? $data['calendar']['name'] : '[немає імені]'; ?>
             </li>
             <li>
                 <span class="uk-text-bold">Опублікований: </span>
@@ -109,17 +112,12 @@
         </div>
     </div>
     <div class="uk-width-1-1 uk-width-medium-1-2">
-        <p>Даний календар збережений до ваших Google календарів.</p>
-        <p>Ви можете обмінюватися ним з іншими користувачами, переглядати та редагувати його на вашому смартфоні чи на <a href="http://calendar.google.com/">www.calendar.google.com</a></p>
+        <p>Даний календар не збережений до ваших Google календарів.</p>
+        <p>Ви можете додати цей календар до ваших Google календарів, щоб обмінюватися ними з іншими користувачами, переглядати та редагувати його на вашому смартфоні чи на <a href="http://calendar.google.com/">www.calendar.google.com</a></p>
     </div>
 </div>
 <form class="uk-margin" action="/calendars/add_to_google">
-    <input type="hidden" name="task" value="delete">
+    <input type="hidden" name="task" value="add">
     <input type="hidden" name="id" value="<?php echo $data['calendar']['id']; ?>">
-    <button class="uk-button uk-button-success">Видалити цей календар з Google</button>
-</form>
-<form class="uk-margin" action="/calendars/add_to_google">
-    <input type="hidden" name="task" value="sync">
-    <input type="hidden" name="id" value="<?php echo $data['calendar']['id']; ?>">
-    <button class="uk-button uk-button-success">Синхронізувати цей календар з Google</button>
+    <button class="uk-button uk-button-success">Додати цей календар до Google</button>
 </form>

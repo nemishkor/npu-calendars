@@ -429,6 +429,39 @@ else
 		<input type="checkbox" name="dual_week" <?php if($params->dual_week == '1') echo 'checked'; ?>> 2-х тижневий розклад
 	</div>
 	<div class="uk-form-row">
+        <?php
+        $timezones = array(
+            'Europe/Amsterdam','Europe/Andorra','Europe/Astrakhan','Europe/Athens',
+            'Europe/BelgradeEurope/Berlin','Europe/Bratislava','Europe/Brussels',
+            'Europe/Bucharest','Europe/Budapest','Europe/Busingen','Europe/Chisinau',
+            'Europe/Copenhagen','Europe/Dublin','Europe/Gibraltar','Europe/Guernsey',
+            'Europe/Helsinki','Europe/Isle_of_Man','Europe/Istanbul','Europe/Jersey',
+            'Europe/Kaliningrad','Europe/Kiev','Europe/Kirov','Europe/Lisbon',
+            'Europe/Ljubljana','Europe/London','Europe/Luxembourg','Europe/Madrid',
+            'Europe/Malta','Europe/Mariehamn','Europe/Minsk','Europe/Monaco',
+            'Europe/Moscow','Europe/Oslo','Europe/Paris','Europe/Podgorica',
+            'Europe/Prague','Europe/Riga','Europe/Rome','Europe/Samara',
+            'Europe/San_Marino','Europe/Sarajevo','Europe/Simferopol','Europe/Skopje',
+            'Europe/Sofia','Europe/Stockholm','Europe/Tallinn','Europe/Tirane',
+            'Europe/Ulyanovsk','Europe/Uzhgorod','Europe/Vaduz','Europe/Vatican',
+            'Europe/Vienna','Europe/Vilnius','Europe/Volgograd','Europe/Warsaw',
+            'Europe/Zagreb','Europe/Zaporozhye','Europe/Zurich',
+        );
+        ?>
+        <span>Часовий пояс </span>
+		<select name="timezone">
+            <?php
+            foreach($timezones as $timezone){
+                if($timezone == $calendar['timezone'])
+                    $checked = 'selected="selected"';
+                else
+                    $checked = '';
+                echo '<option value="' . $timezone . '" ' . $checked . '>' . $timezone . '</option>';
+            }
+            ?>
+        </select>
+	</div>
+	<div class="uk-form-row">
 		<button type="submit" type="button" data-uk-button class="btn-save btn-action uk-button uk-button-primary"><i class="uk-icon-save"></i> Зберегти</button>
 	</div>
 </form>

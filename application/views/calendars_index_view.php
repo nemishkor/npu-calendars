@@ -28,7 +28,7 @@
 	$this->widget('table', array(
 			'data'=>$data['user_calendars'],
 			'hiddenRow'=>array('trashed'=>'1'),
-			'hiddenColumn'=>array('trashed', 'created_by'),
+			'hiddenColumn'=>array('trashed', 'created_by', 'timezone'),
 			'columnClass'=>array('id'=>'key'),
 			'tableClass' => 'uk-table uk-table-hover uk-table-striped uk-table-condensed',
 			'filters' => array('created_by'),
