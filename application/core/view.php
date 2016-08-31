@@ -9,14 +9,16 @@ class View
 	}
 	
 	function generate($content_view, $template_view = "template_view.php", $data = null)
-	{		
-		include 'application/views/'.$template_view;
+	{
+		/** @noinspection PhpIncludeInspection */
+		include 'application/views/' . $template_view;
 	}
 	
 	function widget($name, $params = null){
 		$name = strtolower($name);
 		$widget_file = 'application/widgets/' . $name . '.php';
 		if(file_exists($widget_file)){
+			/** @noinspection PhpIncludeInspection */
 			include($widget_file);
 			$widget_name = 'Widget_' . ucfirst($name);
 			$widget = new $widget_name($params, $this->registry);

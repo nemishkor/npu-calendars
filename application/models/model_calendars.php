@@ -135,35 +135,35 @@ class Model_Calendars extends Model
 		$google = $this->registry['google'];
 		$user = $google->get_user();
 		// get auditories
-		$query = "SELECT * FROM auditories WHERE published='1' AND trashed='0' AND created_by='{$user[id]}'";
+		$query = "SELECT * FROM auditories WHERE published='1' AND trashed='0' AND created_by='{$user['id']}'";
 		$auditories_result = $this->db->query($query);
 		$auditories = array();
 		while($row = $auditories_result->fetch_assoc()){
 			$auditories[] = $row;
 		}
 		// get courses
-		$query = "SELECT * FROM courses WHERE published='1' AND trashed='0' AND created_by='{$user[id]}'";
+		$query = "SELECT * FROM courses WHERE published='1' AND trashed='0' AND created_by='{$user['id']}'";
 		$courses_result = $this->db->query($query);
 		$courses = array();
 		while($row = $courses_result->fetch_assoc()){
 			$courses[] = $row;
 		}
 		// get groups
-		$query = "SELECT * FROM groups WHERE published='1' AND trashed='0' AND created_by='{$user[id]}'";
+		$query = "SELECT * FROM groups WHERE published='1' AND trashed='0' AND created_by='{$user['id']}'";
 		$groups_result = $this->db->query($query);
 		$groups = array();
 		while($row = $groups_result->fetch_assoc()){
 			$groups[] = $row;
 		}
 		// get institutes
-		$query = "SELECT * FROM institutes WHERE published='1' AND trashed='0' AND created_by='{$user[id]}'";
+		$query = "SELECT * FROM institutes WHERE published='1' AND trashed='0' AND created_by='{$user['id']}'";
 		$institutes_result = $this->db->query($query);
 		$institutes = array();
 		while($row = $institutes_result->fetch_assoc()){
 			$institutes[] = $row;
 		}
 		// get lectors
-		$query = "SELECT * FROM lectors WHERE published='1' AND trashed='0' AND created_by='{$user[id]}'";
+		$query = "SELECT * FROM lectors WHERE published='1' AND trashed='0' AND created_by='{$user['id']}'";
 		$lectors_result = $this->db->query($query);
 		$lectors = array();
 		while($row = $lectors_result->fetch_assoc()){
@@ -179,7 +179,7 @@ class Model_Calendars extends Model
 			'params'=>json_decode($user['params']),
 		);
 		if($id == null){
-			$data['calendar'] = array(name=>'', 'published'=>'1', 'id'=>'');
+			$data['calendar'] = array('name'=>'', 'published'=>'1', 'id'=>'');
 		} else {
 			$data['calendar'] = $this->get_item($id);
 		}
@@ -210,8 +210,8 @@ class Model_Calendars extends Model
 		return null;
 	}
 
-	function set_g_calendar($id, $g_id){
-		$query = "UPDATE calendars SET g_calendar_id='{$g_id}' WHERE id='{$id}'";
+	function set_g_calendars($id, $g_id){
+		$query = "UPDATE calendars SET g_calendars='{$g_id}' WHERE id='{$id}'";
 		$result = $this->db->query($query);
 		if($result)
 			return true;
@@ -219,23 +219,23 @@ class Model_Calendars extends Model
 			return false;
 	}
 
-    function get_g_calendar($id){
-        $query = "SELECT g_calendar_id FROM calendars WHERE id='{$id}'";
+    function get_g_calendars($id){
+        $query = "SELECT g_calendars FROM calendars WHERE id='{$id}'";
         $result = $this->db->query($query);
         if($result) {
             $calendar = $result->fetch_assoc();
-            return $calendar['g_calendar_id'];
+            return $calendar['g_calendars'];
         } else
             return false;
     }
 
-    function delete_g_calendar($id){
-        $g_calendar_id = $this->get_g_calendar($id);
-        if ($g_calendar_id) {
-            $query = "UPDATE calendars SET g_calendar_id=NULL WHERE id='{$id}'";
+    function delete_g_calendars($id){
+        $g_calendars = $this->get_g_calendars($id);
+        if ($g_calendars) {
+            $query = "UPDATE calendars SET g_calendars=NULL WHERE id='{$id}'";
             $result = $this->db->query($query);
             if($result) {
-                return $g_calendar_id;
+                return $g_calendars;
             } else
                 return false;
         } else

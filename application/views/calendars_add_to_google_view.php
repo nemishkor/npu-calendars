@@ -109,17 +109,217 @@
         </div>
     </div>
     <div class="uk-width-1-1 uk-width-medium-1-2">
-        <p>Даний календар збережений до ваших Google календарів.</p>
-        <p>Ви можете обмінюватися ним з іншими користувачами, переглядати та редагувати його на вашому смартфоні чи на <a href="http://calendar.google.com/">www.calendar.google.com</a></p>
+        <p>Тут ви можете додати розклади до Google календарів та керувати ними.</p>
+        <p>Ви можете обмінюватися ними з іншими користувачами, переглядати та редагувати його на вашому смартфоні чи на <a href="http://calendar.google.com/">www.calendar.google.com</a></p>
     </div>
 </div>
-<form class="uk-margin" action="/calendars/add_to_google">
-    <input type="hidden" name="task" value="delete">
-    <input type="hidden" name="id" value="<?php echo $data['calendar']['id']; ?>">
-    <button class="uk-button uk-button-success">Видалити цей календар з Google</button>
-</form>
-<form class="uk-margin" action="/calendars/add_to_google">
-    <input type="hidden" name="task" value="sync">
-    <input type="hidden" name="id" value="<?php echo $data['calendar']['id']; ?>">
-    <button class="uk-button uk-button-success">Синхронізувати цей календар з Google</button>
-</form>
+
+<div class="uk-modal" id="events-modal">
+    <div class="uk-modal-dialog">
+        <div class="uk-modal-header"></div>
+        <a class="uk-close uk-modal-close"></a>
+    </div>
+</div>
+
+<div class="uk-panel uk-margin">
+    <h3 class="uk-panel-title">Розклад по групам: </h3>
+    <?php
+    if(!empty($data['groups'])):
+    ?>
+        <table class="uk-table">
+            <tbody>
+            <?php
+            foreach ($data['groups'] as $group):
+                ?>
+                <tr>
+                <td>
+                    <?php
+                    echo $group['name'];
+                    ?>
+                </td>
+                <td>
+                    <button class="uk-button uk-button-small">Переглянути розклад</button>
+                </td>
+                <td>
+                    <?php
+                    $exist = false;
+                    if(is_array($data['g_calendar_list_items']))
+                        foreach($data['g_calendar_list_items'] as $g_item)
+                            foreach($data['g_calendars'] as $key => $saved_calendar)
+                                if($g_item['id'] = $saved_calendar && $key == 'group_' . $group['id'])
+                                    $exist = true;
+                    if($exist){
+                        echo 'календар піключений. єааа<br>';
+                        echo '<button class="uk-button uk-button-small">Синхронізувати</button>
+                                          <button class="uk-button uk-button-small">Видалити</button>';
+                    } else {
+                        $add_link = "/calendars/add_to_google?id=" .
+                                    $data['calendar']['id'] .
+                                    "&task=add&group=" .
+                                    $group['id'];
+                        echo '<a href="' . $add_link . '" class="uk-button uk-button-small">Додати до Google</a>';
+                    }
+                    ?>
+                </td>
+                <td class="uk-text-small uk-text-muted">
+                    <?php
+                    echo $group['id'];
+                    ?>
+                </td>
+                </tr>
+                <?php
+            endforeach;
+            ?>
+            </tbody>
+        </table>
+    <?php
+    endif;
+    ?>
+    <h3 class="uk-panel-title">Розклад по дисциплінам:</h3>
+    <?php
+    if(!empty($data['courses'])):
+        ?>
+        <table class="uk-table">
+            <tbody>
+            <?php
+            foreach ($data['courses'] as $course):
+                ?>
+                <tr>
+                    <td>
+                        <?php
+                        echo $course['name'];
+                        ?>
+                    </td>
+                    <td>
+                        <button class="uk-button uk-button-small">Переглянути розклад</button>
+                    </td>
+                    <td>
+                        <?php
+                        $exist = false;
+                        if(is_array($data['g_calendar_list_items']))
+                            foreach($data['g_calendar_list_items'] as $g_item)
+                                foreach($data['g_calendars'] as $key => $saved_calendar)
+                                    if($g_item['id'] = $saved_calendar && $key == 'course_' . $course['id'])
+                                        $exist = true;
+                        if($exist){
+                            echo 'календар піключений. єааа<br>';
+                            echo '<button class="uk-button uk-button-small">Синхронізувати</button>
+                                              <button class="uk-button uk-button-small">Видалити</button>';
+                        } else {
+                            echo '<button class="uk-button uk-button-small">Додати до Google</button>';
+                        }
+                        ?>
+                    </td>
+                    <td class="uk-text-small uk-text-muted">
+                        <?php
+                        echo $course['id'];
+                        ?>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+            ?>
+            </tbody>
+        </table>
+        <?php
+    endif;
+    ?>
+    <h3 class="uk-panel-title">Розклад по викладач:</h3>
+    <?php
+    if(!empty($data['lectors'])):
+        ?>
+        <table class="uk-table">
+            <tbody>
+            <?php
+            foreach ($data['lectors'] as $lector):
+                ?>
+                <tr>
+                    <td>
+                        <?php
+                        echo $lector['name'];
+                        ?>
+                    </td>
+                    <td>
+                        <button class="uk-button uk-button-small">Переглянути розклад</button>
+                    </td>
+                    <td>
+                        <?php
+                        $exist = false;
+                        if(is_array($data['g_calendar_list_items']))
+                            foreach($data['g_calendar_list_items'] as $g_item)
+                                foreach($data['g_calendars'] as $key => $saved_calendar)
+                                    if($g_item['id'] = $saved_calendar && $key == 'lector_' . $lector['id'])
+                                        $exist = true;
+                        if($exist){
+                            echo 'календар піключений. єааа<br>';
+                            echo '<button class="uk-button uk-button-small">Синхронізувати</button>
+                                              <button class="uk-button uk-button-small">Видалити</button>';
+                        } else {
+                            echo '<button class="uk-button uk-button-small">Додати до Google</button>';
+                        }
+                        ?>
+                    </td>
+                    <td class="uk-text-small uk-text-muted">
+                        <?php
+                        echo $lector['id'];
+                        ?>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+            ?>
+            </tbody>
+        </table>
+        <?php
+    endif;
+    ?>
+    <h3 class="uk-panel-title">Розклад по аудиторіям:</h3>
+    <?php
+    if(!empty($data['auditories'])):
+        ?>
+        <table class="uk-table">
+            <tbody>
+            <?php
+            foreach ($data['auditories'] as $auditory):
+                ?>
+                <tr>
+                    <td>
+                        <?php
+                        echo $auditory['name'];
+                        ?>
+                    </td>
+                    <td>
+                        <button class="uk-button uk-button-small">Переглянути розклад</button>
+                    </td>
+                    <td>
+                        <?php
+                        $exist = false;
+                        if(is_array($data['g_calendar_list_items']))
+                            foreach($data['g_calendar_list_items'] as $g_item)
+                                foreach($data['g_calendars'] as $key => $saved_calendar)
+                                    if($g_item['id'] = $saved_calendar && $key == 'auditory_' . $auditory['id'])
+                                        $exist = true;
+                        if($exist){
+                            echo 'календар піключений. єааа<br>';
+                            echo '<button class="uk-button uk-button-small">Синхронізувати</button>
+                                              <button class="uk-button uk-button-small">Видалити</button>';
+                        } else {
+                            echo '<button class="uk-button uk-button-small">Додати до Google</button>';
+                        }
+                        ?>
+                    </td>
+                    <td class="uk-text-small uk-text-muted">
+                        <?php
+                        echo $auditory['id'];
+                        ?>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+            ?>
+            </tbody>
+        </table>
+        <?php
+    endif;
+    ?>
+</div>
