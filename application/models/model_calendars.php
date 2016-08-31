@@ -29,8 +29,7 @@ class Model_Calendars extends Model
 
 	function create(){
 		$item = $this->get_item_from_form();
-		$query = "INSERT INTO `{$this->table_name}` VALUES(NULL, '{$item['name']}', '{$item['published']}', '0', now(), '{$item['created_by']}', '{$item['events']}', NULL, '{$item['timezone']}')";
-		//~ echo $query . '<br>';
+		$query = "INSERT INTO `{$this->table_name}` VALUES(NULL, '{$item['name']}', '{$item['published']}', '0', now(), '{$item['created_by']}', '{$item['events']}', NULL, '{$item['timezone']}', '{$item['start_date']}', '{$item['end_date']}')";
 		$result = $this->db->query($query);
 		if($result){
 			return $this->db->insert_id;
@@ -40,8 +39,7 @@ class Model_Calendars extends Model
 	
 	function save(){
 		$item = $this->get_item_from_form();
-		$query = "UPDATE {$this->table_name} SET name='{$item['name']}', published='{$item['published']}', events='{$item['events']}', dual_week='{$item['dual_week']}', timezone='{$item['timezone']}' WHERE id='{$item['id']}'";
-		//~ echo $query . '<br>';
+		$query = "UPDATE {$this->table_name} SET name='{$item['name']}', published='{$item['published']}', events='{$item['events']}', dual_week='{$item['dual_week']}', timezone='{$item['timezone']}', start_date='{$item['start_date']}', end_date='{$item['end_date']}' WHERE id='{$item['id']}'";
 		$result = $this->db->query($query);
 		if($result){
 			return $item['id'];
@@ -60,6 +58,8 @@ class Model_Calendars extends Model
             'events'    => $_POST['events'],
             'dual_week' => $dual_week,
             'timezone'  => $_POST['timezone'],
+            'start_date'  => $_POST['start_date'],
+            'end_date'  => $_POST['end_date'],
         );
 		if(isset($_POST['id']) && $_POST['id'])
 			$item['id'] = $_POST['id'];
@@ -68,7 +68,13 @@ class Model_Calendars extends Model
 	
 	function get_view_item($id){
 		$google = $this->registry['google'];
-		$data = array('calendar'=>$this->get_item($id), 'groups'=>array(), 'courses'=>array(), 'lectors'=>array(), 'auditories'=>array(),);
+		$data = array(
+		    'calendar'=>$this->get_item($id),
+            'groups'=>array(),
+            'courses'=>array(),
+            'lectors'=>array(),
+            'auditories'=>array(),
+        );
 		$groupsIds = array();
 		$coursesIds = array();
 		$lectorsIds = array();
@@ -179,7 +185,13 @@ class Model_Calendars extends Model
 			'params'=>json_decode($user['params']),
 		);
 		if($id == null){
-			$data['calendar'] = array('name'=>'', 'published'=>'1', 'id'=>'');
+			$data['calendar'] = array(
+                'name'=>'',
+                'published'=>'1',
+                'id'=>'',
+                'start_date'=>date('Y') . '-09-01',
+                'end_date'=>date('Y') . '-05-31',
+            );
 		} else {
 			$data['calendar'] = $this->get_item($id);
 		}
