@@ -46,17 +46,18 @@ class Controller_Calendars extends Crud_Controller
             return;
         }
         $data = $this->model->get_view_item($_GET['id']);
-        $data['g_calendar_list_items'] = $this->is_exists_in_google($data['calendar']);
+        $google = $this->registry['google'];
+        $service = new Google_Service_Calendar($google->client);
+        $g_list = $service->calendarList->listCalendarList()->getItems();
+        $data['calendar']['g_calendars'] = $this->fix_broken_g_calendars($data['calendar'], $g_list);
+        $data['g_calendar_list_items'] = $this->is_exists_in_google($data['calendar'], $g_list);
         $info_msg = array();
         if(!empty($_GET['task']) && $_GET['task'] == 'add'){
-            $google = $this->registry['google'];
-            $service = new Google_Service_Calendar($google->client);
             if(!empty($_GET['groups'])) {
                 $groups = $this->model->get_field(str_replace('-',',',$_GET['groups']), 'groups');
-                $saved_schedules = $data['calendar']['g_calendars'];
                 foreach ($groups as $group):
                     $exist = false;
-                    foreach ($saved_schedules as $key => $schedule) {
+                    foreach ($data['calendar']['g_calendars'] as $key => $schedule) {
                         if ($key == 'group_' . $group['id'])
                             $exist = true;
                     }
@@ -69,9 +70,9 @@ class Controller_Calendars extends Crud_Controller
                         $created_calendar = $service->calendars->insert($g_calendar);
                         $data['created_calendar'] = $created_calendar;
                         $new_saved_schedule = 'group_' . $group['id'];
-                        $saved_schedules->$new_saved_schedule = $created_calendar['id'];
+                        $data['calendar']['g_calendars']->$new_saved_schedule = $created_calendar['id'];
                         if (!empty($created_calendar['id'])) {
-                            $result = $this->model->set_g_calendars($data['calendar']['id'], json_encode($saved_schedules));
+                            $result = $this->model->set_g_calendars($data['calendar']['id'], json_encode($data['calendar']['g_calendars']));
                             if ($result)
                                 $info_msg[] = ' Групу ' . $group['name'] . ' додано до Google';
                             else
@@ -84,23 +85,40 @@ class Controller_Calendars extends Crud_Controller
                     }
                 endforeach;
             }
-            $google = $this->registry['google'];
-            $service = new Google_Service_Calendar($google->client);
-            $data['g_calendar_list_items'] = $service->calendarList->listCalendarList()->getItems();
         }
+        if(!empty($_GET['task']) && $_GET['task'] == 'delete'){
+            if(!empty($_GET['groups'])) {
+                $groups = $this->model->get_field(str_replace('-', ',', $_GET['groups']), 'groups');
+                foreach ($groups as $group):
+                    $g_calendar_id = null;
+                    foreach ($data['g_calendar_list_items'] as $g_item)
+                        foreach($data['calendar']['g_calendars'] as $key => $schedule)
+                            if($schedule == $g_item['id'] && $key == 'group_' . $group['id'])
+                                $g_calendar_id = $g_item['id'];
+                    if(!is_null($g_calendar_id)){
+                        $service->calendars->delete($g_calendar_id);
+                    }
+                endforeach;
+            }
+        }
+        $g_list = $service->calendarList->listCalendarList()->getItems();
+        $data['g_calendar_list_items'] = $g_list;
         $this->registry->set('info', implode('<br>', $info_msg));
         $this->view->generate($this->view_file_name, 'template_view.php', $data);
 	}
 
     /**
      * @param array $calendar
+     * @param Google_Service_Calendar_CalendarListEntry $g_list
      * @return array of Google_Service_Calendar_CalendarListEntry or false if it doesn't exists
      * @internal param array $calendar from database
      */
-    function is_exists_in_google($calendar){
-        $google = $this->registry['google'];
-        $service = new Google_Service_Calendar($google->client);
-        $g_list = $service->calendarList->listCalendarList()->getItems();
+    function is_exists_in_google($calendar, $g_list = null){
+        if(is_null($g_list)) {
+            $google = $this->registry['google'];
+            $service = new Google_Service_Calendar($google->client);
+            $g_list = $service->calendarList->listCalendarList()->getItems();
+        }
         $g_exists_list = array();
         foreach($g_list as $g_item){
             foreach ($calendar['g_calendars'] as $schedule)
@@ -110,6 +128,28 @@ class Controller_Calendars extends Crud_Controller
         if(count($g_exists_list))
             return $g_exists_list;
         return false;
+    }
+
+    /**
+     * @param array $calendar
+     * @param Google_Service_Calendar_CalendarListEntry $g_list
+     * @return bool true if db transaction is success
+     * @internal param array $calendar from database
+     * if calendar removed from calendar.google.com it sync google and our database
+     */
+    function fix_broken_g_calendars($calendar, $g_list = null){
+        if(is_null($g_list)) {
+            $google = $this->registry['google'];
+            $service = new Google_Service_Calendar($google->client);
+            $g_list = $service->calendarList->listCalendarList()->getItems();
+        }
+        $new_g_calendars = new stdClass();
+        foreach($g_list as $g_item)
+            foreach ($calendar['g_calendars'] as $key => $schedule)
+                if($g_item['id'] == $schedule)
+                    $new_g_calendars->$key = $schedule;
+        $this->model->set_g_calendars($calendar['id'], json_encode($new_g_calendars));
+        return $this->model->get_g_calendars($calendar['id']);
     }
 	
 }
