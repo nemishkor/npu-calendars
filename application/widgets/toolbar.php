@@ -12,7 +12,7 @@ class Widget_Toolbar{
 		$this->params['actions'] = array(
 			'view'=>'1', 
 			'add'=>'1',  
-			'add_to_google'=>'1',
+			'schedules'=>'1',
 			'trash'=>'1',
 			'delete'=>'1', 
 			'publish'=>'1', 
@@ -26,7 +26,7 @@ class Widget_Toolbar{
 		}
 		$google = $this->registry['google'];
 		if(!$google->get_user()){
-			$this->params['actions']['add_to_google'] = 0;
+			$this->params['actions']['schedules'] = 0;
 		}
 		$icons = array(
 			'view'=>'th-list', 
@@ -34,7 +34,7 @@ class Widget_Toolbar{
 			'trash'=>'trash',
 			'untrash'=>'trash-o',
 			'delete'=>'close', 
-			'add_to_google'=>'google', 
+			'schedules'=>'clock-o',
 			'publish'=>'check', 
 			'unpublish'=>'close', 
 			'refresh'=>'refresh', 
@@ -60,7 +60,7 @@ class Widget_Toolbar{
 		$form_edit_class = strtolower($this->registry['controller_name']) . '-edit-form';
 		$form_view_class = strtolower($this->registry['controller_name']) . '-view-form';
 		$form_trash_class = strtolower($this->registry['controller_name']) . '-trash-form';
-		$form_add_to_google_class = strtolower($this->registry['controller_name']) . '-add-to-google-form';
+		$form_schedules_class = strtolower($this->registry['controller_name']) . '-add-to-google-form';
 		$form_delete_class = strtolower($this->registry['controller_name']) . '-delete-form';
 		$table_class = strtolower($this->registry['controller_name']) . '-table';
 		$output = '<script>
@@ -175,20 +175,20 @@ class Widget_Toolbar{
 				</script>';
 		}
 		
-		if($this->params['actions']['add_to_google']){
-			$output .= '<form class="' . $form_add_to_google_class . '" action="/' . $this->registry['controller_name'] . '/add_to_google" method="get">
+		if($this->params['actions']['schedules']){
+			$output .= '<form class="' . $form_schedules_class . '" action="/' . $this->registry['controller_name'] . '/schedules" method="get">
 				    <input type="hidden" name="id">
 				</form>
 				<script>
 				jQuery(document).ready(function(){
-					jQuery(".toolbar .btn-add-to-google").click(function(){
+					jQuery(".toolbar .btn-schedules").click(function(){
 						var check = jQuery(".' . $table_class . ' td.key :checked");
 						if(check.length){
 							var id = check.eq(0).attr("value"); 
-							jQuery(".' . $form_add_to_google_class . ' [name=id]").val(id);
-							jQuery(".' . $form_add_to_google_class . '").submit();
+							jQuery(".' . $form_schedules_class . ' [name=id]").val(id);
+							jQuery(".' . $form_schedules_class . '").submit();
 						} else {
-							UIkit.notify("Для того, щоб додати календар в google відмітьте елемент нижче", {status:"warning"});
+							UIkit.notify("Відмітьте елемент нижче", {status:"warning"});
 							event.preventDefault();
 						}
 					});
@@ -208,8 +208,8 @@ class Widget_Toolbar{
 		if($this->params['actions']['add']){
 			$output .= '<a href="/' . $this->registry['controller_name'] . '/edit" class="btn-add uk-button uk-button-success"><i class="uk-icon-' . $this->params['icons']['add'] . '"></i> Додати</a>';
 		}
-		if($this->params['actions']['add_to_google']){
-			$output .= '<button class="btn-add-to-google uk-button"><i class="uk-icon-' . $this->params['icons']['add_to_google'] . '"></i> Додати до Google Calendars</a>';
+		if($this->params['actions']['schedules']){
+			$output .= '<button class="btn-schedules uk-button"><i class="uk-icon-' . $this->params['icons']['schedules'] . '"></i> Розклади</a>';
 		}
 		if($this->params['actions']['trash']){
 			$output .= '<button href="/' . $this->registry['controller_name'] . '/trash" class="btn-trash uk-button uk-button-warning"><i class="uk-icon-' . $this->params['icons']['trash'] . '"></i> У смітник</button>';

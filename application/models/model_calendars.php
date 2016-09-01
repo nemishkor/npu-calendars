@@ -206,6 +206,10 @@ class Model_Calendars extends Model
 		if($result){
 			$calendar = $result->fetch_assoc();
 			$calendar['events'] = json_decode($calendar['events']);
+			if(is_null($calendar['g_calendars']) || $calendar['g_calendars'] == '')
+				$calendar['g_calendars'] = new stdClass();
+			else
+				$calendar['g_calendars'] = json_decode($calendar['g_calendars']);
 			return $calendar;
 		}
 		return null;
@@ -224,6 +228,7 @@ class Model_Calendars extends Model
 
 	function set_g_calendars($id, $g_id){
 		$query = "UPDATE calendars SET g_calendars='{$g_id}' WHERE id='{$id}'";
+		$this->registry->set('debug',$query);
 		$result = $this->db->query($query);
 		if($result)
 			return true;

@@ -145,7 +145,7 @@
                     $exist = false;
                     if(is_array($data['g_calendar_list_items']))
                         foreach($data['g_calendar_list_items'] as $g_item)
-                            foreach($data['g_calendars'] as $key => $saved_calendar)
+                            foreach($data['calendar']['g_calendars'] as $key => $saved_calendar)
                                 if($g_item['id'] = $saved_calendar && $key == 'group_' . $group['id'])
                                     $exist = true;
                     if($exist){
@@ -153,9 +153,9 @@
                         echo '<button class="uk-button uk-button-small">Синхронізувати</button>
                                           <button class="uk-button uk-button-small">Видалити</button>';
                     } else {
-                        $add_link = "/calendars/add_to_google?id=" .
+                        $add_link = "/calendars/schedules?id=" .
                                     $data['calendar']['id'] .
-                                    "&task=add&group=" .
+                                    "&task=add&groups=" .
                                     $group['id'];
                         echo '<a href="' . $add_link . '" class="uk-button uk-button-small">Додати до Google</a>';
                     }
@@ -198,7 +198,7 @@
                         $exist = false;
                         if(is_array($data['g_calendar_list_items']))
                             foreach($data['g_calendar_list_items'] as $g_item)
-                                foreach($data['g_calendars'] as $key => $saved_calendar)
+                                foreach($data['calendar']['g_calendars'] as $key => $saved_calendar)
                                     if($g_item['id'] = $saved_calendar && $key == 'course_' . $course['id'])
                                         $exist = true;
                         if($exist){
@@ -247,7 +247,7 @@
                         $exist = false;
                         if(is_array($data['g_calendar_list_items']))
                             foreach($data['g_calendar_list_items'] as $g_item)
-                                foreach($data['g_calendars'] as $key => $saved_calendar)
+                                foreach($data['calendar']['g_calendars'] as $key => $saved_calendar)
                                     if($g_item['id'] = $saved_calendar && $key == 'lector_' . $lector['id'])
                                         $exist = true;
                         if($exist){
@@ -296,7 +296,7 @@
                         $exist = false;
                         if(is_array($data['g_calendar_list_items']))
                             foreach($data['g_calendar_list_items'] as $g_item)
-                                foreach($data['g_calendars'] as $key => $saved_calendar)
+                                foreach($data['calendar']['g_calendars'] as $key => $saved_calendar)
                                     if($g_item['id'] = $saved_calendar && $key == 'auditory_' . $auditory['id'])
                                         $exist = true;
                         if($exist){
