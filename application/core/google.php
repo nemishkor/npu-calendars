@@ -86,7 +86,6 @@ class Google extends Model{
 	}
 	
 	function get_permission($permission_request){
-		// check permissions
 		$user = $this->get_user();
 		if($user){ // if user authenticated get current user permission
 			$permissions = $this->get_user_permissions($user['id']);
@@ -110,7 +109,7 @@ class Google extends Model{
 	}
 
 	function check_permission(){
-		return $this->get_permission($this->registry['controller_name'] . '_' . $this->registry['action_name']);
+		return $this->get_permission(strtolower($this->registry['controller_name']) . '_' . strtolower($this->registry['action_name']));
 	}
 	
 	function get_group_permissions($group_id){
