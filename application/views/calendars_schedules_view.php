@@ -1,5 +1,9 @@
 <h1><i class="uk-icon-google"></i>&nbsp;Календар <?php echo ($data['calendar']['name']) ? $data['calendar']['name'] : '[немає імені]'; ?></h1>
 <div class="uk-grid">
+    <div class="uk-width-1-1">
+        <a href="/calendars/schedules?id=<?php echo $data['calendar']['id'] ?>&task=fix"
+            class="uk-button uk-button-small">Try fixing</a>
+    </div>
     <div class="uk-width-1-1 uk-width-medium-1-2">
         <ul class="uk-list uk-list-line">
             <li class="uk-text-small uk-text-muted">
@@ -154,7 +158,7 @@
                                     $exist = true;
                     if($exist){
                         echo 'календар піключений. єааа<br>';
-                        echo '<button class="uk-button uk-button-small">Синхронізувати</button>
+                        echo '<button class="uk-button uk-button-small" disabled title="Функція в процесі розробки" data-uk-tooltip>Синхронізувати</button>
                               <a href="' . $link . '&task=delete" class="uk-button uk-button-small">Видалити</a>';
                     } else {
                         echo '<a href="' . $link . '&task=add" class="uk-button uk-button-small">Додати до Google</a>';
@@ -203,7 +207,7 @@
                                         $exist = true;
                         if($exist){
                             echo 'календар піключений. єааа<br>';
-                            echo '<button class="uk-button uk-button-small">Синхронізувати</button>
+                            echo '<button class="uk-button uk-button-small" disabled title="Функція в процесі розробки" data-uk-tooltip>Синхронізувати</button>
                                               <button class="uk-button uk-button-small">Видалити</button>';
                         } else {
                             echo '<button class="uk-button uk-button-small">Додати до Google</button>';
@@ -252,7 +256,7 @@
                                         $exist = true;
                         if($exist){
                             echo 'календар піключений. єааа<br>';
-                            echo '<button class="uk-button uk-button-small">Синхронізувати</button>
+                            echo '<button class="uk-button uk-button-small" disabled title="Функція в процесі розробки" data-uk-tooltip>Синхронізувати</button>
                                               <button class="uk-button uk-button-small">Видалити</button>';
                         } else {
                             echo '<button class="uk-button uk-button-small">Додати до Google</button>';
@@ -301,7 +305,7 @@
                                         $exist = true;
                         if($exist){
                             echo 'календар піключений. єааа<br>';
-                            echo '<button class="uk-button uk-button-small">Синхронізувати</button>
+                            echo '<button class="uk-button uk-button-small" disabled title="Функція в процесі розробки" data-uk-tooltip>Синхронізувати</button>
                                               <button class="uk-button uk-button-small">Видалити</button>';
                         } else {
                             echo '<button class="uk-button uk-button-small">Додати до Google</button>';
