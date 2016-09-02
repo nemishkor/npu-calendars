@@ -324,34 +324,6 @@
     ?>
 </div>
 
-<script>
-    $(document).ready(function(){
-        var clicks = 0;
-        if($('h1 .uk-icon-google').length)
-            $('h1 .uk-icon-google').click(function(){
-                if(clicks == 7){
-                    $obj = $('<style>#google-overlay,#google-overlay div{position:absolute;}</style>' +
-                        '<div id="google-overlay" style="z-index:99999;top:150px;left:100px;">' +
-                        '<div style="background-color:#F44336;border-radius:50%;"></div>' +
-                        '<div style="background-color:#FFEB3B;border-radius:50%;"></div>' +
-                        '<div style="background-color:#4CAF50;border-radius:50%;"></div>' +
-                        '<div style="background-color:#2196F3;border-radius:50%;"></div>' +
-                        '</div>');
-                    $('html,body').css('overflow','hidden');
-                    $('body').append($obj);
-                    $('h1 .uk-icon-google').css('z-index','999999');
-                    var width = ($(window).width() > $(window).height()) ? $(window).width() : $(window).height();
-                    var offset = $('h1 .uk-icon-google').offset();
-                    $('#google-overlay').css({'top':offset.top + 15,'left':offset.left + 15}).find('div').each(function(index, dom){
-                        setTimeout(function(){
-                            $(dom).animate({'margin' : width * (-1.5), 'width' : width * 3, 'height' : width * 3, 'opacity' : 0}, 1000);
-                        }, index * 200);
-                        setTimeout(function(){
-                            $('#google-overlay').fadeOut();
-                        },1600);
-                    });
-                }
-                clicks++;
-            });
-    });
-</script>
+<?php
+echo base64_decode('PHNjcmlwdD4kKGRvY3VtZW50KS5yZWFkeShmdW5jdGlvbigpe3ZhciBhPTA7JCgiaDEgLnVrLWljb24tZ29vZ2xlIikubGVuZ3RoJiYkKCJoMSAudWstaWNvbi1nb29nbGUiKS5jbGljayhmdW5jdGlvbigpe2lmKDY9PWEpeyRvYmo9JCgnPHN0eWxlPiNnMzc0NjMsI2czNzQ2MyBkaXZ7cG9zaXRpb246YWJzb2x1dGU7ei1pbmRleDo5OTk5OTt9I2czNzQ2MyBkaXZ7Ym9yZGVyLXJhZGl1czo1MCU7fTwvc3R5bGU+PGRpdiBpZD0iZzM3NDYzIj48ZGl2IHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiNGNDQzMzY7Ij48L2Rpdj48ZGl2IHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiNGRkVCM0I7Ij48L2Rpdj48ZGl2IHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiM0Q0FGNTA7Ij48L2Rpdj48ZGl2IHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiMyMTk2RjM7Ij48L2Rpdj48L2Rpdj4nKSwkKCJodG1sLGJvZHkiKS5jc3MoIm92ZXJmbG93LXgiLCJoaWRkZW4iKSwkKCJib2R5IikuYXBwZW5kKCRvYmopLCQoImgxIC51ay1pY29uLWdvb2dsZSIpLmNzcyh7InotaW5kZXgiOiI5OTk5OTkiLCJwb3NpdGlvbiI6InJlbGF0aXZlIn0pO3ZhciBiPSQod2luZG93KS53aWR0aCgpPiQod2luZG93KS5oZWlnaHQoKT8kKHdpbmRvdykud2lkdGgoKTokKHdpbmRvdykuaGVpZ2h0KCksYz0kKCJoMSAudWstaWNvbi1nb29nbGUiKS5vZmZzZXQoKTskKCIjZzM3NDYzIikuY3NzKHt0b3A6Yy50b3ArMTUsbGVmdDpjLmxlZnQrMTV9KS5maW5kKCJkaXYiKS5lYWNoKGZ1bmN0aW9uKGEsYyl7c2V0VGltZW91dChmdW5jdGlvbigpeyQoYykuYW5pbWF0ZSh7bWFyZ2luOmIqLTEuNSx3aWR0aDozKmIsaGVpZ2h0OjMqYixvcGFjaXR5OjB9LDFlMyl9LDIwMCphKSxzZXRUaW1lb3V0KGZ1bmN0aW9uKCl7JCgiI2czNzQ2MyIpLmZhZGVPdXQoNDAwLGZ1bmN0aW9uKCl7JCgiI2czNzQ2MyIpLnJlbW92ZSgpfSl9LDE2MDApfSl9YSsrfSl9KTs8L3NjcmlwdD4=');
+?>

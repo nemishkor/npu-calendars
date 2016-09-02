@@ -271,8 +271,6 @@ class Controller_Calendars extends Crud_Controller
                             $end .= '00:00:00';
                             break;
                     }
-                    $start .= 'Z';
-                    $end .= 'Z';
                     $recurrence = 'RRULE:FREQ=WEEKLY;';
                     if ($data['calendar']['dual_week'] == "1")
                         $recurrence .= 'INTERVAL=2;';
