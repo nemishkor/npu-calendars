@@ -19,7 +19,7 @@
 	<script src="/js/components/notify.js"></script>
 	<link rel="stylesheet" href="/css/components/notify.css">
 	
-	<script src="/js/components/tooltip.js"></script>
+	<script src="/js/components/tooltip.min.js"></script>
 	<link rel="stylesheet" href="/css/components/tooltip.css">
 	
 	<script src="/js/core/toggle.js"></script>

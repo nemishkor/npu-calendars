@@ -53,9 +53,6 @@ class Controller_Calendars extends Crud_Controller
         $data['calendar']['g_calendars'] = $this->fix_broken_g_calendars($data['calendar'], $g_list);
         $data['g_calendar_list_items'] = $this->is_exists_in_google($data['calendar'], $g_list);
         $info_msg = array();
-        if(!empty($_GET['task']) && $_GET['task'] == 'fix'){
-            $info_msg[] = 'емм. тут нічого немає';
-        }
         if(!empty($_GET['task'])):
             $filters_base = array(
                 'groups' => array(
@@ -102,10 +99,11 @@ class Controller_Calendars extends Crud_Controller
                             $fields = $this->model->get_field(str_replace('-', ',', $_GET['groups']), 'groups');
                             foreach ($fields as $field):
                                 $g_calendar_id = null;
-                                foreach ($data['g_calendar_list_items'] as $g_item)
-                                    foreach($data['calendar']['g_calendars'] as $key => $schedule)
-                                        if($schedule == $g_item['id'] && $key == $filter_base['name of one item'] . '_' . $field['id'])
-                                            $g_calendar_id = $g_item['id'];
+                                if($data['g_calendar_list_items'])
+                                    foreach ($data['g_calendar_list_items'] as $g_item)
+                                        foreach($data['calendar']['g_calendars'] as $key => $schedule)
+                                            if($schedule == $g_item['id'] && $key == $filter_base['name of one item'] . '_' . $field['id'])
+                                                $g_calendar_id = $g_item['id'];
                                 if(!is_null($g_calendar_id)){
                                     $result = $service->calendars->delete($g_calendar_id);
                                     if($result)
@@ -278,7 +276,10 @@ class Controller_Calendars extends Crud_Controller
                     $recurrence = 'RRULE:FREQ=WEEKLY;';
                     if ($data['calendar']['dual_week'] == "1")
                         $recurrence .= 'INTERVAL=2;';
-                    $recurrence .= 'UNTIL=' . str_replace('-', '', $until) . 'T235959Z';
+                    $recurrence .= 'UNTIL=' . str_replace('-', '', $until) . 'T235959Z;';
+                    $recurrence .= 'WKST=MO;'; // day on which the workweek starts
+                    $byday = array('MO','TU','WE','TH','FR','SA');
+                    $recurrence .= 'BYDAY=' . $byday[$day_key] . ';';
                     $event = new Google_Service_Calendar_Event(array(
                         'summary' => $summary,
                         'location' => $auditory['name'],

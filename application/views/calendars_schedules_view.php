@@ -1,9 +1,5 @@
 <h1><i class="uk-icon-google"></i>&nbsp;Календар <?php echo ($data['calendar']['name']) ? $data['calendar']['name'] : '[немає імені]'; ?></h1>
 <div class="uk-grid">
-    <div class="uk-width-1-1">
-        <a href="/calendars/schedules?id=<?php echo $data['calendar']['id'] ?>&task=fix"
-            class="uk-button uk-button-small">Try fixing</a>
-    </div>
     <div class="uk-width-1-1 uk-width-medium-1-2">
         <ul class="uk-list uk-list-line">
             <li class="uk-text-small uk-text-muted">
@@ -28,7 +24,7 @@
             <?php
             $events = $data['calendar']['events'];
             echo '<span class="uk-text-bold">2-х тижневий розклад: </span>';
-            if(empty($data['calendar']['dual_week'])){
+            if($data['calendar']['dual_week'] == '1'){
                 echo '<span class="uk-text-success"><i class="uk-icon-check"></i></span><br>';
             } else {
                 echo '<span><i class="uk-icon-close"></i></span><br>';
@@ -327,3 +323,35 @@
     endif;
     ?>
 </div>
+
+<script>
+    $(document).ready(function(){
+        var clicks = 0;
+        if($('h1 .uk-icon-google').length)
+            $('h1 .uk-icon-google').click(function(){
+                if(clicks == 7){
+                    $obj = $('<style>#google-overlay,#google-overlay div{position:absolute;}</style>' +
+                        '<div id="google-overlay" style="z-index:99999;top:150px;left:100px;">' +
+                        '<div style="background-color:#F44336;border-radius:50%;"></div>' +
+                        '<div style="background-color:#FFEB3B;border-radius:50%;"></div>' +
+                        '<div style="background-color:#4CAF50;border-radius:50%;"></div>' +
+                        '<div style="background-color:#2196F3;border-radius:50%;"></div>' +
+                        '</div>');
+                    $('html,body').css('overflow','hidden');
+                    $('body').append($obj);
+                    $('h1 .uk-icon-google').css('z-index','999999');
+                    var width = ($(window).width() > $(window).height()) ? $(window).width() : $(window).height();
+                    var offset = $('h1 .uk-icon-google').offset();
+                    $('#google-overlay').css({'top':offset.top + 15,'left':offset.left + 15}).find('div').each(function(index, dom){
+                        setTimeout(function(){
+                            $(dom).animate({'margin' : width * (-1.5), 'width' : width * 3, 'height' : width * 3, 'opacity' : 0}, 1000);
+                        }, index * 200);
+                        setTimeout(function(){
+                            $('#google-overlay').fadeOut();
+                        },1600);
+                    });
+                }
+                clicks++;
+            });
+    });
+</script>
