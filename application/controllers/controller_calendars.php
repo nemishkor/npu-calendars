@@ -60,6 +60,11 @@ class Controller_Calendars extends Crud_Controller
                     'readable name' => 'Група',
                     'second readable name' => 'групи',
                 ),
+                'courses' => array(
+                    'name of one item' => 'course',
+                    'readable name' => 'Дисципліна',
+                    'second readable name' => 'дисципліни',
+                ),
             );
             foreach ($filters_base as $filter_key => $filter_base) {
                 if (empty($_GET[$filter_key]))
@@ -69,7 +74,7 @@ class Controller_Calendars extends Crud_Controller
                     if($_GET['task'] == 'add'){
                         $exist = false;
                         foreach ($data['calendar']['g_calendars'] as $key => $schedule) {
-                            if ($key == 'group_' . $field['id'])
+                            if ($key == $filter_base['name of one item'] . '_' . $field['id'])
                                 $exist = true;
                         }
                         if (!$exist) {

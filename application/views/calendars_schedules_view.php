@@ -195,6 +195,10 @@
                     </td>
                     <td>
                         <?php
+                        $link = "/calendars/schedules?id=" .
+                            $data['calendar']['id'] .
+                            "&courses=" .
+                            $course['id'];
                         $exist = false;
                         if(is_array($data['g_calendar_list_items']))
                             foreach($data['g_calendar_list_items'] as $g_item)
@@ -204,9 +208,9 @@
                         if($exist){
                             echo 'календар піключений. єааа<br>';
                             echo '<button class="uk-button uk-button-small" disabled title="Функція в процесі розробки" data-uk-tooltip>Синхронізувати</button>
-                                              <button class="uk-button uk-button-small">Видалити</button>';
+                                  <a href="' . $link . '&task=delete" class="uk-button uk-button-small">Видалити</a>';
                         } else {
-                            echo '<button class="uk-button uk-button-small">Додати до Google</button>';
+                            echo '<a href="' . $link . '&task=add" class="uk-button uk-button-small">Додати до Google</a>';
                         }
                         ?>
                     </td>
