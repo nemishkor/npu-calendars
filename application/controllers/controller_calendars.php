@@ -65,6 +65,16 @@ class Controller_Calendars extends Crud_Controller
                     'readable name' => 'Дисципліна',
                     'second readable name' => 'дисципліни',
                 ),
+                'lectors' => array(
+                    'name of one item' => 'lector',
+                    'readable name' => 'Викладач',
+                    'second readable name' => 'викладача',
+                ),
+                'auditories' => array(
+                    'name of one item' => 'auditory',
+                    'readable name' => 'Аудиторія',
+                    'second readable name' => 'аудиторії',
+                ),
             );
             foreach ($filters_base as $filter_key => $filter_base) {
                 if (empty($_GET[$filter_key]))
@@ -99,26 +109,24 @@ class Controller_Calendars extends Crud_Controller
                         } else
                             $info_msg[] = 'Розклад ' . $filter_base['second readable name'] . ' ' . $field['name'] . ' [' . $field['id'] . '] вже доданий до Google!';
                     }
-                    if($_GET['task'] == 'delete'){
-                        if(!empty($_GET['groups'])) {
-                            $fields = $this->model->get_field(str_replace('-', ',', $_GET['groups']), 'groups');
-                            foreach ($fields as $field):
-                                $g_calendar_id = null;
-                                if($data['g_calendar_list_items'])
-                                    foreach ($data['g_calendar_list_items'] as $g_item)
-                                        foreach($data['calendar']['g_calendars'] as $key => $schedule)
-                                            if($schedule == $g_item['id'] && $key == $filter_base['name of one item'] . '_' . $field['id'])
-                                                $g_calendar_id = $g_item['id'];
-                                if(!is_null($g_calendar_id)){
-                                    $result = $service->calendars->delete($g_calendar_id);
-                                    if($result)
-                                        $info_msg[] = 'Розклад ' . $filter_base['second readable name'] . ' ' . $field['name'] . ' [' . $field['id'] . '] видалений з Google';
-                                    else
-                                        $this->registry->set('Виникла помилка під час видалення ' . $filter_base['second readable name'] . ' ' . $field['name'] . ' [' . $field['id'] . '] з Google');
-                                } else
-                                    $info_msg[] = 'Розклад ' . $filter_base['second readable name'] . ' ' . $field['name'] . ' [' . $field['id'] . '] вже видалений з Google. Якщо це не так, ви можете видалити його з <a href="http://calendar.google.com">calendar.google.com</a>';
-                            endforeach;
-                        }
+                    if($_GET['task'] == 'delete') {
+                        $fields = $this->model->get_field(str_replace('-', ',', $_GET[$filter_key]), $filter_key);
+                        foreach ($fields as $field):
+                            $g_calendar_id = null;
+                            if ($data['g_calendar_list_items'])
+                                foreach ($data['g_calendar_list_items'] as $g_item)
+                                    foreach ($data['calendar']['g_calendars'] as $key => $schedule)
+                                        if ($schedule == $g_item['id'] && $key == $filter_base['name of one item'] . '_' . $field['id'])
+                                            $g_calendar_id = $g_item['id'];
+                            if (!is_null($g_calendar_id)) {
+                                $result = $service->calendars->delete($g_calendar_id);
+                                if ($result)
+                                    $info_msg[] = 'Розклад ' . $filter_base['second readable name'] . ' ' . $field['name'] . ' [' . $field['id'] . '] видалений з Google';
+                                else
+                                    $this->registry->set('Виникла помилка під час видалення ' . $filter_base['second readable name'] . ' ' . $field['name'] . ' [' . $field['id'] . '] з Google');
+                            } else
+                                $info_msg[] = 'Розклад ' . $filter_base['second readable name'] . ' ' . $field['name'] . ' [' . $field['id'] . '] вже видалений з Google. Якщо це не так, ви можете видалити його з <a href="http://calendar.google.com">calendar.google.com</a>';
+                        endforeach;
                     }
                 endforeach;
             }
