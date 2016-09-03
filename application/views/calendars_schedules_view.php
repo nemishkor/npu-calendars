@@ -114,10 +114,32 @@
     </div>
 </div>
 
-<div class="uk-modal" id="events-modal">
-    <div class="uk-modal-dialog">
-        <div class="uk-modal-header"></div>
-        <a class="uk-close uk-modal-close"></a>
+<div class="uk-grid">
+    <?php
+    $all_link = '/calendars/schedules?id=' . $data['calendar']['id'];
+    $filters_base = array('groups','courses','lectors','auditories');
+    foreach ($filters_base as $filter_base) {
+        if (count($data[$filter_base]))
+            $all_link .= '&' . $filter_base . '=';
+        foreach ($data[$filter_base] as $index => $filter) {
+            $all_link .= $filter['id'];
+            if (count($data[$filter_base]) - 1 != $index)
+                $all_link .= '-';
+        }
+    }
+    ?>
+    <div class="uk-width-1-4">
+        <a href="<?php echo $all_link . '&task=add'; ?>"
+           class="uk-button uk-button-success uk-width-1-1 uk-button-large">Додати всі розклади</a>
+    </div>
+    <div class="uk-width-1-4">
+        <a href="<?php echo $all_link . '&task=delete'; ?>"
+           class="uk-button uk-button-danger uk-width-1-1 uk-button-large">Видалити всі розклади</a>
+    </div>
+    <div class="uk-width-1-2">
+        <div class="uk-alert">
+            <i class="uk-icon-info-circle"></i> Ви можете додати/видалити всі розклади відразу, або вибірково нижче
+        </div>
     </div>
 </div>
 
@@ -334,6 +356,13 @@
         <?php
     endif;
     ?>
+</div>
+
+<div class="uk-modal" id="events-modal">
+    <div class="uk-modal-dialog">
+        <div class="uk-modal-header"></div>
+        <a class="uk-close uk-modal-close"></a>
+    </div>
 </div>
 
 <?php
