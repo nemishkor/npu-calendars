@@ -143,51 +143,58 @@
     </div>
 </div>
 
-<div class="uk-panel uk-margin">
+<div class="uk-panel uk-margin uk-form">
     <h3 class="uk-panel-title">Розклад по групам: </h3>
     <?php
     if(!empty($data['groups'])):
     ?>
-        <table class="uk-table">
+        <table class="schedules-groups uk-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Назва</th>
+                    <th>Дії</th>
+                    <th>id</th>
+                </tr>
+            </thead>
             <tbody>
             <?php
             foreach ($data['groups'] as $group):
                 ?>
                 <tr>
-                <td>
-                    <?php
-                    echo $group['name'];
-                    ?>
-                </td>
-                <td>
-                    <button class="uk-button uk-button-small">Переглянути розклад</button>
-                </td>
-                <td>
-                    <?php
-                    $link = "/calendars/schedules?id=" .
-                        $data['calendar']['id'] .
-                        "&groups=" .
-                        $group['id'];
-                    $exist = false;
-                    if(is_array($data['g_calendar_list_items']))
-                        foreach($data['g_calendar_list_items'] as $g_item)
-                            foreach($data['calendar']['g_calendars'] as $key => $saved_calendar)
-                                if($g_item['id'] = $saved_calendar && $key == 'group_' . $group['id'])
-                                    $exist = true;
-                    if($exist){
-                        echo 'календар піключений. єааа<br>';
-                        echo '<button class="uk-button uk-button-small" disabled title="Функція в процесі розробки" data-uk-tooltip>Синхронізувати</button>
-                              <a href="' . $link . '&task=delete" class="uk-button uk-button-small">Видалити</a>';
-                    } else {
-                        echo '<a href="' . $link . '&task=add" class="uk-button uk-button-small">Додати до Google</a>';
-                    }
-                    ?>
-                </td>
-                <td class="uk-text-small uk-text-muted">
-                    <?php
-                    echo $group['id'];
-                    ?>
-                </td>
+                    <td><input type="checkbox" data-value="<?php echo $group['id']; ?>"></td>
+                    <td>
+                        <?php
+                        echo $group['name'];
+                        ?>
+                    </td>
+                    <td>
+                        <button class="uk-button uk-button-small" disabled title="Функція в процесі розробки" data-uk-tooltip>Переглянути розклад</button>
+                        <?php
+                        $link = "/calendars/schedules?id=" .
+                            $data['calendar']['id'] .
+                            "&groups=" .
+                            $group['id'];
+                        $exist = false;
+                        if(is_array($data['g_calendar_list_items']))
+                            foreach($data['g_calendar_list_items'] as $g_item)
+                                foreach($data['calendar']['g_calendars'] as $key => $saved_calendar)
+                                    if($g_item['id'] = $saved_calendar && $key == 'group_' . $group['id'])
+                                        $exist = true;
+                        if($exist){
+                            echo 'календар піключений. єааа<br>';
+                            echo '<button class="uk-button uk-button-small" disabled title="Функція в процесі розробки" data-uk-tooltip>Синхронізувати</button>
+                                  <a href="' . $link . '&task=delete" class="uk-button uk-button-small">Видалити</a>';
+                        } else {
+                            echo '<a href="' . $link . '&task=add" class="uk-button uk-button-small">Додати до Google</a>';
+                        }
+                        ?>
+                    </td>
+                    <td class="uk-text-small uk-text-muted">
+                        <?php
+                        echo $group['id'];
+                        ?>
+                    </td>
                 </tr>
                 <?php
             endforeach;
@@ -201,12 +208,21 @@
     <?php
     if(!empty($data['courses'])):
         ?>
-        <table class="uk-table">
+        <table class="schedules-courses uk-table">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Назва</th>
+                <th>Дії</th>
+                <th>id</th>
+            </tr>
+            </thead>
             <tbody>
             <?php
             foreach ($data['courses'] as $course):
                 ?>
                 <tr>
+                    <td><input type="checkbox" data-value="<?php echo $course['id']; ?>"></td>
                     <td>
                         <?php
                         echo $course['name'];
@@ -214,8 +230,6 @@
                     </td>
                     <td>
                         <button class="uk-button uk-button-small">Переглянути розклад</button>
-                    </td>
-                    <td>
                         <?php
                         $link = "/calendars/schedules?id=" .
                             $data['calendar']['id'] .
@@ -254,12 +268,21 @@
     <?php
     if(!empty($data['lectors'])):
         ?>
-        <table class="uk-table">
+        <table class="schedules-lectors uk-table">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Назва</th>
+                <th>Дії</th>
+                <th>id</th>
+            </tr>
+            </thead>
             <tbody>
             <?php
             foreach ($data['lectors'] as $lector):
                 ?>
                 <tr>
+                    <td><input type="checkbox" data-value="<?php echo $lector['id']; ?>"></td>
                     <td>
                         <?php
                         echo $lector['name'];
@@ -267,8 +290,6 @@
                     </td>
                     <td>
                         <button class="uk-button uk-button-small">Переглянути розклад</button>
-                    </td>
-                    <td>
                         <?php
                         $link = "/calendars/schedules?id=" .
                             $data['calendar']['id'] .
@@ -307,12 +328,21 @@
     <?php
     if(!empty($data['auditories'])):
         ?>
-        <table class="uk-table">
+        <table class="schedules-auditories uk-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Назва</th>
+                    <th>Дії</th>
+                    <th>id</th>
+                </tr>
+            </thead>
             <tbody>
             <?php
             foreach ($data['auditories'] as $auditory):
                 ?>
                 <tr>
+                    <td><input type="checkbox" data-value="<?php echo $auditory['id']; ?>"></td>
                     <td>
                         <?php
                         echo $auditory['name'];
@@ -320,8 +350,6 @@
                     </td>
                     <td>
                         <button class="uk-button uk-button-small">Переглянути розклад</button>
-                    </td>
-                    <td>
                         <?php
                         $link = "/calendars/schedules?id=" .
                             $data['calendar']['id'] .
@@ -357,6 +385,44 @@
     endif;
     ?>
 </div>
+
+<form class="selection-actions" action="/calendars/schedules">
+    <input type="hidden" name="id" value="<?php echo $data['calendar']['id']; ?>">
+    <input type="hidden" name="groups">
+    <input type="hidden" name="courses">
+    <input type="hidden" name="lectors">
+    <input type="hidden" name="auditories">
+    <input type="hidden" name="task">
+    <button class="add-btn uk-button uk-button-success">Додати вибрані розклади</button>
+    <button class="delete-btn uk-button uk-button-danger">Видалити вибрані розклади</button>
+</form>
+<script>
+    $(document).ready(function(){
+        $('form.selection-actions button').on('click', function(event){
+            var form = $(this).parents('form').first();
+            var check = jQuery("table[class*='schedules-'] :checked");
+            if(check.length){
+                var filters = ['groups', 'courses', 'lectors', 'auditories'];
+                for(var i = 0; i < filters.length; i++){
+                    form.find('[name="' + filters[i] + '"]').val();
+                    $('.schedules-' + filters[i] + ' input:checked').each(function(index, dom){
+                        var value = form.find('[name="' + filters[i] + '"]').val();
+                        if(index != 0)
+                            value += '-';
+                        form.find('[name="' + filters[i] + '"]').val(value + $(dom).attr('data-value'));
+                    });
+                }
+                if($(this).hasClass('add-btn'))
+                    form.find('[name="task"]').val('add');
+                else if($(this).hasClass('delete-btn'))
+                    form.find('[name="task"]').val('delete');
+            } else {
+                UIkit.notify("Відмітьте елемент вище", {status:"warning"});
+                event.preventDefault();
+            }
+        });
+    });
+</script>
 
 <div class="uk-modal" id="events-modal">
     <div class="uk-modal-dialog">
