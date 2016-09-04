@@ -8,7 +8,13 @@
             </li>
             <li>
                 <span class="uk-text-bold">Опублікований: </span>
-                <?php echo ($data['calendar']['published']) ? '<span class="uk-text-success"><i class="uk-icon-check"></i></span>' : '<span class="uk-text-success"><i class="uk-icon-close"></i></span>'; ?>
+                <?php
+                if($data['calendar']['published'])
+                    echo '<span class="uk-text-success"><i class="uk-icon-check"></i></span>&nbsp;
+                          <span class="uk-text-success">Студентам (учням) будуть доступні для перегляду ваші додані в Google розклади</span>';
+                else
+                    echo '<span class="uk-text-success"><i class="uk-icon-close"></i></span>&nbsp;
+                          <span>Студенти (учні) не будуть бачити ваші розклади</span>'; ?>
             </li>
             <li>
                 <span class="uk-text-bold">Дата створення: </span>
@@ -111,6 +117,7 @@
     <div class="uk-width-1-1 uk-width-medium-1-2">
         <p>Тут ви можете додати розклади до Google календарів та керувати ними.</p>
         <p>Ви можете обмінюватися ними з іншими користувачами, переглядати та редагувати його на вашому смартфоні чи на <a href="http://calendar.google.com/">www.calendar.google.com</a></p>
+        <p>Студенти (учні, інші користувачі) зможуть бачити ваші розклади з Google лише, якщо даний календар опублікований</p>
     </div>
 </div>
 
@@ -386,7 +393,7 @@
     ?>
 </div>
 
-<form class="selection-actions" action="/calendars/schedules">
+<form class="selection-actions" style="display: none;" action="/calendars/schedules">
     <input type="hidden" name="id" value="<?php echo $data['calendar']['id']; ?>">
     <input type="hidden" name="groups">
     <input type="hidden" name="courses">
@@ -398,6 +405,12 @@
 </form>
 <script>
     $(document).ready(function(){
+        $('table[class*="schedules-"] input').change(function(){
+            if(jQuery("table[class*='schedules-'] :checked").length)
+                $('form.selection-actions').show(400);
+            else
+                $('form.selection-actions').hide(400);
+        });
         $('form.selection-actions button').on('click', function(event){
             var form = $(this).parents('form').first();
             var check = jQuery("table[class*='schedules-'] :checked");
