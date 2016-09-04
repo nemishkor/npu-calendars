@@ -32,18 +32,29 @@
 		<nav class="uk-navbar uk-margin-top">
 
 			<ul class="uk-navbar-nav">
-				<li><a href="/auditories">Аудиторії</a></li>
-				<li><a href="/calendars">Календарі</a></li>
-				<li><a href="/courses">Дисципліни</a></li>
-				<li><a href="/groups">Групи</a></li>
-				<li><a href="/institutes">Інститути</a></li>
-				<li><a href="/lectors">Викладачі</a></li>
-				<li><a href="/settings">Налаштування</a></li>
-				<li><a href="/doc">Документація</a></li>
+				<?php
+				$google = $this->registry->get('google');
+				if($google->get_user()) {
+					?>
+					<li><a href="/auditories">Аудиторії</a></li>
+					<li><a href="/calendars">Календарі</a></li>
+					<li><a href="/courses">Дисципліни</a></li>
+					<li><a href="/groups">Групи</a></li>
+					<li><a href="/institutes">Інститути</a></li>
+					<li><a href="/lectors">Викладачі</a></li>
+					<li><a href="/settings">Налаштування</a></li>
+					<li><a href="/doc">Документація</a></li>
+					<?php
+				} else {
+					?>
+					<li><a href="/schedules">Розклади</a></li>
+					<?php
+				}
+				?>
 			</ul>
 			<div class="uk-float-right">
 				<?php
-//				$this->widget('login');
+				$this->widget('login');
 				?>
 			</div>
 
