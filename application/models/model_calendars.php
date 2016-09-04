@@ -66,10 +66,10 @@ class Model_Calendars extends Model
 		return $item;
 	}
 	
-	function get_view_item($id){
+	function get_view_item($id, $public = null){
 		$google = $this->registry['google'];
 		$data = array(
-		    'calendar'=>$this->get_item($id),
+		    'calendar'=>$this->get_item($id, $public),
             'groups'=>array(),
             'courses'=>array(),
             'lectors'=>array(),
@@ -83,7 +83,8 @@ class Model_Calendars extends Model
 			if($data['calendar']['name'] == '' || $data['calendar']['name'] == null)
 				$data['calendar']['name'] = 'немає імені';
 			$user = $google->get_user($data['calendar']['created_by']);
-			$data['calendar']['created_by'] = $user['name'] . '(' . $user['email'] . ')';
+			if($user)
+				$data['calendar']['created_by'] = $user['name'] . '(' . $user['email'] . ')';
 			$events = $data['calendar']['events'];
 			foreach($events as $week){
 				foreach($week as $day){
@@ -108,6 +109,18 @@ class Model_Calendars extends Model
 			$data['auditories'] = $this->get_auditories(implode(',', $auditoriesIds));
 		}
 		return $data;
+	}
+
+	function get_public_calendars(){
+		$query = "SELECT c.id,c.name,c.created,c.start_date,c.end_date,u.name as user_name FROM calendars AS c LEFT JOIN users AS u ON c.created_by=u.id WHERE c.published='1' AND c.trashed='0'";
+		$result = $this->db->query($query);
+		$items = array();
+		while($row = $result->fetch_assoc()){
+			if(is_null($row['user_name']))
+				$row['user_name'] = 'Немає імені';
+			$items[] = $row;
+		}
+		return $items;
 	}
 	
 	function get_groups($ids){
@@ -198,10 +211,13 @@ class Model_Calendars extends Model
 		return $data;
 	}
 	
-	function get_item($id){
-		$google = $this->registry['google'];
-		$user = $google->get_user();
-		$query = "SELECT * FROM calendars WHERE id={$id} AND created_by='{$user[id]}'";
+	function get_item($id, $public = null){
+		$query = "SELECT * FROM calendars WHERE id={$id}";
+		if(is_null($public)) {
+			$google = $this->registry['google'];
+			$user = $google->get_user();
+			$query .= " AND created_by='{$user[id]}'";
+		}
 		$result = $this->db->query($query);
 		if($result){
 			$calendar = $result->fetch_assoc();
