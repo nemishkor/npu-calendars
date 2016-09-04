@@ -93,7 +93,7 @@ $auditories = $data['auditories'];
 							lesson.find('.lesson-lector span').text(lector['name']);
 							lesson.find('.lesson-lector').show(400);
 						} else 
-							lesson.find('.lesson-group').hide(400);
+							lesson.find('.lesson-lector').hide(400);
 						if(type != 'auditory'){
 							lesson.find('.lesson-auditory span').text(auditory['name']);
 							lesson.find('.lesson-auditory').show(400);
