@@ -22,11 +22,12 @@ class Google extends Model{
         $this->client->addScope(Google_Service_Calendar::CALENDAR);
 		$this->client->setAccessType('offline');
 		$this->client->setRedirectUri('http://' . $_SERVER['HTTP_HOST'] . '/user/oauth2callback');
+		$excludes = array('user', 'schedules', 'page');
 		if (!empty($_SESSION['access_token']) && isset($_SESSION['access_token']['id_token'])) {
 			$this->client->setAccessToken($_SESSION['access_token']);
 			$this->user_data = $this->client->verifyIdToken();
 		} else {
-			if($this->registry['controller_name'] != 'user' && $this->registry['controller_name'] != 'schedules') {
+			if(in_array($this->registry['controller_name'], $excludes)) {
 				$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/user/index';
 				header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 			}
