@@ -73,24 +73,7 @@
 		
 		<?php include 'application/views/'.$content_view; ?>
 
-		<?php
-		if(!empty($this->registry['debug'])){
-			echo '<span class="uk-margin-large-top uk-text-muted">debug</span>';
-			echo '<pre>';
-			var_dump($this->registry['debug']);
-			echo '</pre>';
-		}
-		if(!empty($data)){
-		?>
-			<span class="uk-margin-large-top uk-text-muted">var_dump($data);</span>
-			<pre>
-			<?php
-			var_dump($data);
-			?>
-			</pre>
-		<?php
-		}
-		?>
+		<?php $this->widget('debug'); ?>
 		
 	</div>
 	
