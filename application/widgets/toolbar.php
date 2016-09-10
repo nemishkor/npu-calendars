@@ -15,10 +15,11 @@ class Widget_Toolbar{
 			'schedules'=>'1',
 			'trash'=>'1',
 			'delete'=>'1', 
-			'publish'=>'1', 
+			'publish'=>'1',
 			'unpublish'=>'1', 
 			'refresh'=>'1', 
-			'edit'=>'1');
+			'edit'=>'1',
+			'import'=>'1',);
 		if(count($params)){
 			foreach($params as $key=>$value){
 				$this->params['actions'][$key] = $value;
@@ -38,7 +39,8 @@ class Widget_Toolbar{
 			'publish'=>'check', 
 			'unpublish'=>'close', 
 			'refresh'=>'refresh', 
-			'edit'=>'edit');
+			'edit'=>'edit',
+			'import'=>'file-excel-o');
 		$this->params['icons'] = $icons;
 		if(isset($params['icons']) && $params['icons']){
 			foreach($params['icons'] as $key=>$value){
@@ -229,6 +231,9 @@ class Widget_Toolbar{
 		}
 		if($this->params['actions']['edit']){
 			$output .= '<button href="/' . $this->registry['controller_name'] . '/edit" class="btn-edit uk-button uk-button-primary"><i class="uk-icon-' . $this->params['icons']['edit'] . '"></i> Редагувати</button>';
+		}
+		if($this->params['actions']['import']){
+			$output .= '<a href="/' . $this->registry['controller_name'] . '/import" class="uk-hidden btn-import uk-button"><i class="uk-icon-' . $this->params['icons']['import'] . '"></i> Імпорт csv</a>';
 		}
 		$output .= '</div>';
 		echo $output;
