@@ -27,6 +27,15 @@
                 </div>
             </div>
         </div>
+        <div class="import-toolbar uk-margin uk-button-group" style="display: none;">
+            <button class="uk-button uk-button-success"><i class="uk-icon-plus"></i> Додати</button>
+            <button id="split-name"
+                    class="uk-button"
+                    data-uk-tooltip
+                    title="Дані в полі &quot;Ім'я&quot; розділяться на 3 поля: &quot;Ім'я&quot;, &quot;Призвіще&quot;, &quot;По батькові&quot;">
+                Розділити ПІБ
+            </button>
+        </div>
         <table id="imported-data" class="uk-margin" style="display: none;">
             <thead>
             <tr class="fields">
@@ -90,7 +99,7 @@
             }
             form.find("tbody").append(tr);
         }
-        form.show(400);
+        form.add('.import-toolbar').show(400);
         var element = document.getElementById('file-content');
         element.innerHTML = contents;
     }
@@ -124,7 +133,7 @@
                         .append('<option value="' + fields[i].name + '" selected>' + fields[i].label + '</option>');
                 } else {
                     field.find('select')
-                        .append('<option value="null" selected>немає поля</option>');
+                        .append('<option value="null" selected>-= немає поля =-</option>');
                 }
                 for (var j = 0; j < options.length; j++) {
                     field.find('select')
@@ -132,7 +141,7 @@
                 }
                 if(fields[i].show) {
                     field.find('select')
-                        .append('<option value="null">немає поля</option>');
+                        .append('<option value="null">-= немає поля =-</option>');
                     firstFields += field[0].outerHTML;
                 } else {
                     secondFields += field[0].outerHTML;
@@ -143,7 +152,7 @@
             var obj = $(this);
             var newValue = $(this).val();
             var newValueIndex;
-            var oldValueIndex;
+            var oldValueIndex = null;
             // deleting option with OLD value and change 'show' parameter
             obj.find('option').each(function(index, dom){
                 console.log('option = ' + $(dom).html());
@@ -175,7 +184,11 @@
                             }
                         });
                     }
-                }).append('<option value="' + fields[oldValueIndex].name + '">' + fields[oldValueIndex].label + '</option>');
+                });
+            }
+            if(oldValueIndex != null) {
+                var oldOption = '<option value="' + fields[oldValueIndex].name + '">' + fields[oldValueIndex].label + '</option>';
+                $('#imported-data .fields th select').append(oldOption);
             }
         }
         console.log(fields);
@@ -185,5 +198,44 @@
         update_table_fields();
         $('#file-input').on('change', readSingleFile);
         $('#imported-data thead select').on('change', update_table_fields);
+        $('#split-name').click(function(){
+            var success = true;
+            var nameCol = null;
+            var surnameCol = null;
+            var lastnameCol = null;
+            $('#imported-data .fields select').each(function(index, dom){
+                var option = $(dom).find('option:selected');
+                if(option.attr('value') == 'name')
+                    nameCol = index;
+                if(option.attr('value') == 'surname')
+                    surnameCol = index;
+                if(option.attr('value') == 'lastname')
+                    lastnameCol = index;
+            });
+            if(nameCol == null && surnameCol == null && lastnameCol == null)
+                success = false;
+            else {
+                $('#imported-data tbody tr').each(function(){
+                    var str = $(this).find('td').eq(nameCol);
+                    if($(this).find('td').eq(surnameCol).val() == '' &&
+                       $(this).find('td').eq(lastnameCol).val() == ''){
+                        var surNamePos  = str.indexOf(' ');
+                        var lastNamePos = str.indexOf(' ', surNamePos + 1);
+                        var name        = str.substring(0, surNamePos);
+                        var surName     = str.substring(surNamePos, lastNamePos);
+                        var lastName    = str.substr(lastNamePos);
+                        console.log("name = " + name);
+                        console.log("surname = " + surName);
+                        console.log("lastname = " + lastName);
+                        if(surName && lastName){
+                            $(this).find('td').eq(surnameCol).val(surName);
+                            $(this).find('td').eq(lastnameCol).val(lastName);
+                        }
+                    }
+                });
+            }
+            if(success)
+                $(this).attr('disabled', '').addClass('uk-disabled');
+        });
     });
 </script>
