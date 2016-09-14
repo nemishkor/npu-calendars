@@ -426,7 +426,14 @@ else
 		<input type="radio" name="published" value="0" <?php if($calendar['published'] == '0') echo 'checked' ?>> Вимкнений
 	</div>
 	<div class="uk-form-row">
-		<input type="checkbox" name="dual_week" <?php if($params->dual_week == '1') echo 'checked'; ?>> 2-х тижневий розклад
+        <?php
+        if(empty($_GET['id'])){
+            $checked = ($params->dual_week == '1') ? 'checked' : '';
+        } else {
+            $checked = ($calendar['dual_week'] == '1') ? 'checked' : '';
+        }
+        ?>
+		<input type="checkbox" name="dual_week" <?php echo $checked; ?>> 2-х тижневий розклад
 	</div>
 	<div class="uk-form-row">
         <?php

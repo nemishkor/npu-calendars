@@ -29,7 +29,7 @@ class Model_Calendars extends Model
 
 	function create(){
 		$item = $this->get_item_from_form();
-		$query = "INSERT INTO `{$this->table_name}` VALUES(NULL, '{$item['name']}', '{$item['published']}', '0', now(), '{$item['created_by']}', '{$item['events']}', NULL, '{$item['timezone']}', '{$item['start_date']}', '{$item['end_date']}')";
+		$query = "INSERT INTO `{$this->table_name}` VALUES(NULL, '{$item['name']}', '{$item['published']}', '0', now(), '{$item['created_by']}', '{$item['events']}', '{$item['dual_week']}', NULL, '{$item['timezone']}', '{$item['start_date']}', '{$item['end_date']}')";
 		$result = $this->db->query($query);
 		if($result){
 			return $this->db->insert_id;
@@ -50,15 +50,14 @@ class Model_Calendars extends Model
 	function get_item_from_form(){
 		$google = $this->registry['google'];
 		$user = $google->get_user();
-		$dual_week = ($_POST['dual_week']) ? '1' : '0';
 		$item = array(
 		    'name'      => $_POST['name'],
             'created_by'=> $user['id'],
             'published' => $_POST['published'],
             'events'    => $_POST['events'],
-            'dual_week' => $dual_week,
+            'dual_week' => ($_POST['dual_week'] == 'on') ? 1 : 0,
             'timezone'  => $_POST['timezone'],
-            'start_date'  => $_POST['start_date'],
+            'start_date' => $_POST['start_date'],
             'end_date'  => $_POST['end_date'],
         );
 		if(isset($_POST['id']) && $_POST['id'])

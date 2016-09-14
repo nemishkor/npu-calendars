@@ -1,4 +1,4 @@
-<h1><i class="uk-icon-file-excel-o"></i> Імпорт викладачів</h1>
+<h1><i class="uk-icon-file-excel-o"></i> Імпорт викладачів <sup class="uk-text-danger">beta</sup></h1>
 <div class="uk-grid">
     <div class="uk-width-1-2">
         <div class="uk-form uk-form-horizontal">
@@ -28,7 +28,10 @@
             </div>
         </div>
         <div class="import-toolbar uk-margin uk-button-group" style="display: none;">
-            <button class="uk-button uk-button-success"><i class="uk-icon-plus"></i> Додати</button>
+            <button id="submit-import"
+                    class="uk-button uk-button-success">
+                <i class="uk-icon-plus"></i> Імпортувати таблицю нижче
+            </button>
             <button id="split-name"
                     class="uk-button"
                     data-uk-tooltip
@@ -212,30 +215,59 @@
                 if(option.attr('value') == 'lastname')
                     lastnameCol = index;
             });
+            console.log("nameCol = " + nameCol);
+            console.log("surnameCol = " + surnameCol);
+            console.log("lastnameCol = " + lastnameCol);
             if(nameCol == null && surnameCol == null && lastnameCol == null)
                 success = false;
             else {
                 $('#imported-data tbody tr').each(function(){
-                    var str = $(this).find('td').eq(nameCol);
-                    if($(this).find('td').eq(surnameCol).val() == '' &&
-                       $(this).find('td').eq(lastnameCol).val() == ''){
+                    var str = $(this).find('td').eq(nameCol).text();
+//                    if($(this).find('td').eq(surnameCol).val() == '' &&
+//                       $(this).find('td').eq(lastnameCol).val() == ''){
                         var surNamePos  = str.indexOf(' ');
                         var lastNamePos = str.indexOf(' ', surNamePos + 1);
                         var name        = str.substring(0, surNamePos);
                         var surName     = str.substring(surNamePos, lastNamePos);
                         var lastName    = str.substr(lastNamePos);
-                        console.log("name = " + name);
-                        console.log("surname = " + surName);
-                        console.log("lastname = " + lastName);
-                        if(surName && lastName){
-                            $(this).find('td').eq(surnameCol).val(surName);
-                            $(this).find('td').eq(lastnameCol).val(lastName);
+                        if(name && surName && lastName){
+                            $(this).find('td').eq(nameCol).text(name);
+                            $(this).find('td').eq(surnameCol).text(surName);
+                            $(this).find('td').eq(lastnameCol).text(lastName);
                         }
-                    }
+//                    }
                 });
             }
             if(success)
                 $(this).attr('disabled', '').addClass('uk-disabled');
+        });
+        $('#submit-import').click(function(){
+            $('#imported-data .fields select').each(function(index, dom){
+                var option = $(dom).find('option:selected');
+                for(var j = 0; j < fields.length; j++) {
+                    if (option.attr('value') == fields[j].name)
+                        fields[j].col = index;
+                }
+            });
+            var data = [];
+            $('#imported-data tbody tr').each(function(index, dom) {
+                var row = {};
+                $(dom).find('td').each(function(index2, dom2) {
+                    for(var i = 0; i < fields.length; i++)
+                        if(fields[i].col == index2)
+                            row[fields[i].name] = $(dom2).text();
+                });
+                data.push(row);
+            });
+            $.post(
+                "/lectors/import_ajax",
+                {
+                    data: data
+                },
+                function(response){
+                    console.log(response);
+                }
+            );
         });
     });
 </script>
