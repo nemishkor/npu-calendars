@@ -500,7 +500,7 @@ $(document).ready(function(){
 			
 			weeks.push(week);
 		}
-		if(!$("#<?php echo strtolower($this->registry['controller_name']); ?>-form [name='dual_week']:selected").length){
+		if($("#<?php echo strtolower($this->registry['controller_name']); ?>-form [name='dual_week']:selected").length){
 			weeks[1] = weeks[0];
 		}
 		$(this).find('[name=events]').val(JSON.stringify(weeks));
