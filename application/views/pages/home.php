@@ -19,10 +19,12 @@
     <div class="uk-margin uk-panel uk-panel-box">
         <div class="uk-grid uk-grid-divider">
             <div class="uk-width-1-2 uk-text-center uk-width-1-1">
+                <img src="images/student.png">
                 <h3>Ви студент (учень)</h3>
                 <a class="uk-button uk-button-large uk-button-primary" href="/schedules/index">Знайти розклад</a>
             </div>
             <div class="uk-width-1-2 uk-text-center">
+                <img src="images/educator.png">
                 <h3>Ви адміністрація закладу</h3>
                 <div class="uk-clearfix"></div>
                 <a class="uk-button uk-button-large" href="/user/login">Увійти через Google</a>
