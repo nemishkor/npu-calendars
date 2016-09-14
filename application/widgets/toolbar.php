@@ -233,7 +233,7 @@ class Widget_Toolbar{
 			$output .= '<button href="/' . $this->registry['controller_name'] . '/edit" class="btn-edit uk-button uk-button-primary"><i class="uk-icon-' . $this->params['icons']['edit'] . '"></i> Редагувати</button>';
 		}
 		if($this->params['actions']['import']){
-			$output .= '<a href="/' . $this->registry['controller_name'] . '/import" class="uk-hidden btn-import uk-button"><i class="uk-icon-' . $this->params['icons']['import'] . '"></i> Імпорт csv</a>';
+			$output .= '<a href="/' . $this->registry['controller_name'] . '/import" class="btn-import uk-button"><i class="uk-icon-' . $this->params['icons']['import'] . '"></i> Імпорт csv</a>';
 		}
 		$output .= '</div>';
 		echo $output;
