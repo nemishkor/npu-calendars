@@ -163,7 +163,10 @@ else
 			$('#modal-groups tbody').append(row);
 		}
 		$('#modal-groups tbody tr').on('click', function(){
-			$(this).addClass('selected').siblings().removeClass('selected');
+			if($(this).hasClass('selected'))
+				$(this).parents('.uk-modal-dialog').find('button.btn-save').first().click();
+			else
+				$(this).addClass('selected').siblings().removeClass('selected');
 		});
 	}
 	function addCourses(){
@@ -176,7 +179,10 @@ else
 			$('#modal-courses tbody').append(row);
 		}
 		$('#modal-courses tbody tr').on('click', function(){
-			$(this).addClass('selected').siblings().removeClass('selected');
+            if($(this).hasClass('selected'))
+                $(this).parents('.uk-modal-dialog').find('button.btn-save').first().click();
+            else
+                $(this).addClass('selected').siblings().removeClass('selected');
 		});
 	}
 	function addLectors(){
@@ -199,7 +205,10 @@ else
 			$('#modal-lectors tbody').append(row);
 		}
 		$('#modal-lectors tbody tr').on('click', function(){
-			$(this).addClass('selected').siblings().removeClass('selected');
+            if($(this).hasClass('selected'))
+                $(this).parents('.uk-modal-dialog').find('button.btn-save').first().click();
+            else
+                $(this).addClass('selected').siblings().removeClass('selected');
 		});
 	}
 	function addAudituries(){
@@ -219,7 +228,10 @@ else
 			$('#modal-auditories tbody').append(row);
 		}
 		$('#modal-auditories tbody tr').on('click', function(){
-			$(this).addClass('selected').siblings().removeClass('selected');
+            if($(this).hasClass('selected'))
+                $(this).parents('.uk-modal-dialog').find('button.btn-save').first().click();
+            else
+                $(this).addClass('selected').siblings().removeClass('selected');
 		});
 	}
 	
