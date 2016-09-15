@@ -76,7 +76,6 @@ else
 			}
 			$('.weeks').append($('<li></li>').append(week));
 		}
-		console.log(events);
 		// fill form data from server
 		if(events){
 			for (i = 0; i < 2; i++){

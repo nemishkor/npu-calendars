@@ -174,35 +174,35 @@ class Model_Calendars extends Model
 		$google = $this->registry['google'];
 		$user = $google->get_user();
 		// get auditories
-		$query = "SELECT * FROM auditories WHERE published='1' AND trashed='0' AND created_by='{$user['id']}'";
+		$query = "SELECT * FROM auditories WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
 		$auditories_result = $this->db->query($query);
 		$auditories = array();
 		while($row = $auditories_result->fetch_assoc()){
 			$auditories[] = $row;
 		}
 		// get courses
-		$query = "SELECT * FROM courses WHERE published='1' AND trashed='0' AND created_by='{$user['id']}'";
+		$query = "SELECT * FROM courses WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
 		$courses_result = $this->db->query($query);
 		$courses = array();
 		while($row = $courses_result->fetch_assoc()){
 			$courses[] = $row;
 		}
 		// get groups
-		$query = "SELECT * FROM groups WHERE published='1' AND trashed='0' AND created_by='{$user['id']}'";
+		$query = "SELECT * FROM groups WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
 		$groups_result = $this->db->query($query);
 		$groups = array();
 		while($row = $groups_result->fetch_assoc()){
 			$groups[] = $row;
 		}
 		// get institutes
-		$query = "SELECT * FROM institutes WHERE published='1' AND trashed='0' AND created_by='{$user['id']}'";
+		$query = "SELECT * FROM institutes WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
 		$institutes_result = $this->db->query($query);
 		$institutes = array();
 		while($row = $institutes_result->fetch_assoc()){
 			$institutes[] = $row;
 		}
 		// get lectors
-		$query = "SELECT * FROM lectors WHERE published='1' AND trashed='0' AND created_by='{$user['id']}'";
+		$query = "SELECT * FROM lectors WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
 		$lectors_result = $this->db->query($query);
 		$lectors = array();
 		while($row = $lectors_result->fetch_assoc()){
