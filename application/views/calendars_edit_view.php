@@ -92,22 +92,18 @@ else
 							var course = getCourse(lesson[1]);
 							var lector = getLector(lesson[2]);
 							var auditory = getAuditory(lesson[3]);
-							newLesson
-								.data('group', group['id'])
-								.data('course', course['id'])
-								.data('lector', lector['id'])
-								.data('auditory', auditory['id'])
-								.find('.lesson-add')
-								.attr('disabled', '')
-								.siblings()
-								.removeAttr('disabled');
 							newLesson.find('.lesson-group').text(group['name']);
 							newLesson.find('.lesson-course').text(course['name']);
 							newLesson.find('.lesson-lector').text(lector['name']);
 							newLesson.find('.lesson-auditory').text(auditory['name']);
 							$('.week').eq(i).find('.day').eq(j)
 								.find('.lessons').eq(k).append(newLesson[0].outerHTML)
-								.find('.lesson').show();
+								.find('.lesson')
+								.data('group', group['id'])
+								.data('course', course['id'])
+								.data('lector', lector['id'])
+								.data('auditory', auditory['id'])
+								.show();
 						}
 					}
 				}
