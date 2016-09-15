@@ -53,6 +53,7 @@ else
 	
 	// create events UI and fill data to them
 	function init(){
+		console.log(events);
 		var dayNames = ['Понеділок', 'Вівторок', 'Середа', 'Четверг', 'П\'ятниця', 'Субота'];
 		for (var i = 0; i < 2; i++){
 			var week = $('<div class="week uk-grid uk-grid-small" data-uk-margin></div>');
@@ -438,6 +439,31 @@ else
 		$('#modal-courses .uk-modal-footer button').click(add_lesson2);
 		$('#modal-lectors .uk-modal-footer button').click(add_lesson3);
 		$('#modal-auditories .uk-modal-footer button').click(add_lesson4);
+		// fix for clicking on close(x) button in modal dialogs
+		$('#modal-groups').on({
+			'hide.uk.modal': function(){
+				if(group == null)
+					addLessonCancel();
+			}
+		});
+		$('#modal-courses').on({
+			'hide.uk.modal': function(){
+				if(course == null)
+					addLessonCancel();
+			}
+		});
+		$('#modal-lectors').on({
+			'hide.uk.modal': function(){
+				if(lector == null)
+					addLessonCancel();
+			}
+		});
+		$('#modal-auditories').on({
+			'hide.uk.modal': function(){
+				if(auditory == null)
+					addLessonCancel();
+			}
+		});
 	});
 	
 	// END editing events
@@ -484,6 +510,7 @@ else
 	</div>
 	<div class="uk-form-row">
 		<button type="submit" type="button" data-uk-button class="btn-save btn-action uk-button uk-button-primary"><i class="uk-icon-save"></i> Зберегти</button>
+		<button type="submit" type="button" data-uk-button class="confirm btn-save btn-action uk-button uk-button-primary"><i class="uk-icon-save"></i> Точно</button>
 	</div>
 </form>
 
@@ -529,7 +556,11 @@ $(document).ready(function(){
 		if($("#<?php echo strtolower($this->registry['controller_name']); ?>-form [name='dual_week']:selected").length){
 			weeks[1] = weeks[0];
 		}
+		console.log(weeks);
 		$(this).find('[name=events]').val(JSON.stringify(weeks));
+
+		if(!btn.hasClass('confirm'))
+			return false;
 
 		//~ else
 		//~ if(btn.hasClass('btn-close'))
