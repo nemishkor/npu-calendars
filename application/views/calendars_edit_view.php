@@ -53,7 +53,6 @@ else
 	
 	// create events UI and fill data to them
 	function init(){
-		console.log(events);
 		var dayNames = ['Понеділок', 'Вівторок', 'Середа', 'Четверг', 'П\'ятниця', 'Субота'];
 		for (var i = 0; i < 2; i++){
 			var week = $('<div class="week uk-grid uk-grid-small" data-uk-margin></div>');
@@ -510,7 +509,6 @@ else
 	</div>
 	<div class="uk-form-row">
 		<button type="submit" type="button" data-uk-button class="btn-save btn-action uk-button uk-button-primary"><i class="uk-icon-save"></i> Зберегти</button>
-		<button type="submit" type="button" data-uk-button class="confirm btn-save btn-action uk-button uk-button-primary"><i class="uk-icon-save"></i> Точно</button>
 	</div>
 </form>
 
@@ -556,11 +554,7 @@ $(document).ready(function(){
 		if($("#<?php echo strtolower($this->registry['controller_name']); ?>-form [name='dual_week']:selected").length){
 			weeks[1] = weeks[0];
 		}
-		console.log(weeks);
 		$(this).find('[name=events]').val(JSON.stringify(weeks));
-
-		if(!btn.hasClass('confirm'))
-			return false;
 
 		//~ else
 		//~ if(btn.hasClass('btn-close'))
