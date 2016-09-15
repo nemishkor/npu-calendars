@@ -220,11 +220,12 @@ class Model_Calendars extends Model
 		);
 		if($id == null){
 			$data['calendar'] = array(
-                'name'=>'',
-                'published'=>'1',
-                'id'=>'',
-                'start_date'=>date('Y') . '-09-01',
-                'end_date'=>date('Y') . '-05-31',
+                'name'		=> '',
+                'published'	=> '1',
+                'id'		=> '',
+				'timezone'	=> null,
+                'start_date'=> date('Y') . '-09-01',
+                'end_date'	=> date('Y') . '-05-31',
             );
 		} else {
 			$data['calendar'] = $this->get_item($id);

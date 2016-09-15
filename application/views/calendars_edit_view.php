@@ -1,7 +1,6 @@
 <?php
 $calendar = $data['calendar'];
 $params = $data['params'];
-
 if(isset($_GET['id']) && $_GET['id'])
 	echo '<h1><i class="uk-icon-edit"></i> Редагувати календар</h1>'; 
 else
@@ -486,7 +485,7 @@ else
 	<div class="uk-form-row">
         <?php
         if(empty($_GET['id'])){
-            $checked = ($params->dual_week == '1') ? 'checked' : '';
+            $checked = ($params->dual_week == 'on') ? 'checked' : '';
         } else {
             $checked = ($calendar['dual_week'] == '1') ? 'checked' : '';
         }
@@ -498,6 +497,8 @@ else
 		<select name="timezone">
             <?php
             foreach($data['timezones'] as $timezone){
+				if(is_null($calendar['timezone']))
+					$calendar['timezone'] = $params->timezone;
                 if($timezone == $calendar['timezone'])
                     $checked = 'selected="selected"';
                 else
