@@ -30,21 +30,26 @@ $auditories = $data['auditories'];
                 var day = $('<div class="day-wrapper uk-width-1-1 uk-width-small-1-3" data-uk-margin><div class="day uk-panel uk-panel-box"><span class="day-name uk-panel-title uk-muted uk-h3"></span><hr></div></div>');
                 day.find('.day-name').text(dayNames[j]);
                 for(var k = 0; k < 9; k++){
-                    var lesson = $('\
-					<div class="lesson">\
-						<div class="uk-grid" data-uk-margin>\
-							<div class="lesson-header uk-width-1-1">\
-								<span class="lesson-number"></span>\
-							</div>\
-						<div class="lesson-values uk-width-1-1">\
-							<div class="lesson-group uk-width-1-1" style="display:none"><i class="uk-icon-users"></i> <span></span></div>\
-							<div class="lesson-course uk-width-1-1" style="display:none"><i class="uk-icon-book"></i> <span></span></div>\
-							<div class="lesson-lector uk-width-1-1" style="display:none"><i class="uk-icon-mortar-board"></i> <span></span></div>\
-							<div class="lesson-auditory uk-width-1-1" style="display:none"><i class="uk-icon-cube"></i> <span></span></div>\
-						</div>\
+                    var lessons = $('\
+					<div class="lessons uk-grid" data-uk-margin>\
+                        <div class="lessons-header uk-width-1-1">\
+                            <span class="lesson-number"></span>\
+                        </div>\
 					</div>');
-                    lesson.find('.lesson-number').text((k + 1) + ' - пара');
-                    day.find('.day').append(lesson);
+                    for (var m = 0; m < events[i][j][k].length; m++){
+                        var lesson = $($('.lesson-template').html());
+                        lesson.find('.lesson-group span').text(getGroup(events[i][j][k][m][0])['name']);
+                        lesson.find('.lesson-course span').text(getCourse(events[i][j][k][m][1])['name']);
+                        lesson.find('.lesson-lector span').text(getLector(events[i][j][k][m][2])['name']);
+                        lesson.find('.lesson-auditory span').text(getAuditory(events[i][j][k][m][3])['name']);
+                        lessons.append(lesson[0].outerHTML).find('.lesson').last()
+                            .data('group', events[i][j][k][m][0])
+                            .data('course', events[i][j][k][m][1])
+                            .data('lector', events[i][j][k][m][2])
+                            .data('auditory', events[i][j][k][m][3]);
+                    }
+                    lessons.find('.lesson-number').text((k + 1) + ' - пара');
+                    day.find('.day').append(lessons);
                     if(k != 8)
                         day.find('.day').append('<hr>');
                 }
@@ -80,41 +85,37 @@ $auditories = $data['auditories'];
         for (var i = 0; i < 2; i++){
             for (var j = 0; j < 6; j++){
                 for (var k = 0; k < 9; k++){
-                    var lesson = $('.week').eq(i).find('.day').eq(j).find('.lesson').eq(k);
-                    if(type == "group" && events[i][j][k][0] == id || type == "course" && events[i][j][k][1] == id || type == "lector" && events[i][j][k][2] == id || type == "auditory" && events[i][j][k][3] == id){
-                        var group = getGroup(events[i][j][k][0]);
-                        var course = getCourse(events[i][j][k][1]);
-                        var lector = getLector(events[i][j][k][2]);
-                        var auditory = getAuditory(events[i][j][k][3]);
-                        if(type != 'group'){
-                            lesson.find('.lesson-group span').text(group['name']);
-                            lesson.find('.lesson-group').show(400);
-                        } else
-                            lesson.find('.lesson-group').hide(400);
-                        if(type != 'course'){
-                            lesson.find('.lesson-course span').text(course['name']);
-                            lesson.find('.lesson-course').show(400);
-                        } else
-                            lesson.find('.lesson-course').hide(400);
-                        if(type != 'lector'){
-                            lesson.find('.lesson-lector span').text(lector['name']);
-                            lesson.find('.lesson-lector').show(400);
-                        } else
-                            lesson.find('.lesson-lector').hide(400);
-                        if(type != 'auditory'){
-                            lesson.find('.lesson-auditory span').text(auditory['name']);
-                            lesson.find('.lesson-auditory').show(400);
-                        } else
-                            lesson.find('.lesson-auditory').hide(400);
-                    } else {
-                        lesson.find('.lesson-group').hide();
-                        lesson.find('.lesson-group span').text('');
-                        lesson.find('.lesson-course').hide();
-                        lesson.find('.lesson-course span').text('');
-                        lesson.find('.lesson-lector').hide();
-                        lesson.find('.lesson-lector span').text('');
-                        lesson.find('.lesson-auditory').hide();
-                        lesson.find('.lesson-auditory span').text('');
+                    var lessons = $('.week').eq(i).find('.day').eq(j).find('.lessons').eq(k);
+                    for (var m = 0; m < lessons.length; m++) {
+                        var lesson = lessons.find('.lesson').eq(m);
+                        console.log('m = ' + m);
+                        console.log("lesson.data('group') = " + lesson.data('group'));
+                        console.log("id = " + id);
+                        if (type == "group" && lesson.data('group') == id ||
+                            type == "course" && lesson.data('course') == id ||
+                            type == "lector" && lesson.data('lector') == id ||
+                            type == "auditory" && lesson.data('group') == id) {
+                            console.log('show lesson');
+                            lesson.show();
+                            if (type != 'group') {
+                                lesson.find('.lesson-group').show(400);
+                            } else
+                                lesson.find('.lesson-group').hide(400);
+                            if (type != 'course') {
+                                lesson.find('.lesson-course').show(400);
+                            } else
+                                lesson.find('.lesson-course').hide(400);
+                            if (type != 'lector') {
+                                lesson.find('.lesson-lector').show(400);
+                            } else
+                                lesson.find('.lesson-lector').hide(400);
+                            if (type != 'auditory') {
+                                lesson.find('.lesson-auditory').show(400);
+                            } else
+                                lesson.find('.lesson-auditory').hide(400);
+                        } else {
+                            lesson.hide();
+                        }
                     }
                 }
             }
@@ -177,13 +178,17 @@ $auditories = $data['auditories'];
 </script>
 
 
-
-
-
-<h1><i class="uk-icon-clock-o"></i> Розклад <?php echo $calendar['name']; ?></h1>
-<div style="background-image: url(/images/mh-1.jpg); height: 100px;"
-     class="uk-width-1-1 uk-cover-background">
+<div class="lesson-template">
+    <div class="lesson uk-width-1-1" style="display: none;">
+        <div class="lesson-group uk-width-1-1"><i class="uk-icon-users"></i> <span></span></div>
+        <div class="lesson-course uk-width-1-1"><i class="uk-icon-book"></i> <span></span></div>
+        <div class="lesson-lector uk-width-1-1"><i class="uk-icon-mortar-board"></i> <span></span></div>
+        <div class="lesson-auditory uk-width-1-1"><i class="uk-icon-cube"></i> <span></span></div>
+    </div>
 </div>
+
+
+<h1><i class="uk-icon-clock-o"></i> <?php echo $calendar['name']; ?></h1>
 
 <div class="uk-margin">
     <div class="uk-grid">
