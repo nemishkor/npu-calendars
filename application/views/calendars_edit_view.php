@@ -505,6 +505,14 @@ else
         </select>
 	</div>
 	<div class="uk-form-row">
+		<label for="start_date">Початок навчання</label>
+		<input name="start_date" id="start_date" value="<?php echo $calendar['start_date']; ?>">
+	</div>
+	<div class="uk-form-row">
+		<label for="end_date">Кінець навчання</label>
+		<input name="end_date" id="end_date" value="<?php echo $calendar['end_date']; ?>">
+	</div>
+	<div class="uk-form-row">
 		<button type="submit" type="button" data-uk-button class="btn-save btn-action uk-button uk-button-primary"><i class="uk-icon-save"></i> Зберегти</button>
 	</div>
 </form>

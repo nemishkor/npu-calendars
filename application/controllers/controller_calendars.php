@@ -34,7 +34,7 @@ class Controller_Calendars extends Crud_Controller
 	
 	function action_view(){
 		if(!(isset($_GET['id']) && $_GET['id']))
-			$this->registry->set('error', 'You must choise calendar for view them');
+			$this->registry->set('error', 'You must choice calendar for view them');
 		$data = $this->model->get_view_item($_GET['id']);
 		$this->view->generate($this->view_file_name, 'template_view.php', $data);
 	}

@@ -78,7 +78,7 @@ class Model_Calendars extends Model
             'events'    => $_POST['events'],
             'dual_week' => ($_POST['dual_week'] == 'on') ? 1 : 0,
             'timezone'  => $_POST['timezone'],
-            'start_date' => $_POST['start_date'],
+            'start_date'=> $_POST['start_date'],
             'end_date'  => $_POST['end_date'],
         );
 		if(isset($_POST['id']) && $_POST['id'])
@@ -245,9 +245,21 @@ class Model_Calendars extends Model
 		$result = $this->db->query($query);
 		if($result){
 			$calendar = $result->fetch_assoc();
+
+            $start_date = DateTime::createFromFormat('Y-m-d', $calendar['start_date']);
+            if(!$start_date || !checkdate($start_date->format('m'), $start_date->format('d'), $start_date->format('Y')))
+                $calendar['start_date'] = date('Y') . '-09-01';
+            else
+                $calendar['start_date'] = $start_date->format('Y-m-d');
+            $end_date = DateTime::createFromFormat('Y-m-d', $calendar['end_date']);
+            if(!$end_date || !checkdate($end_date->format('m'), $end_date->format('d'), $end_date->format('Y')))
+                $calendar['end_date'] = (date('Y') + 1) . '-05-31';
+            else
+                $calendar['end_date'] = $end_date->format('Y-m-d');
+
 			$calendar['events'] = json_decode($calendar['events']);
 			if(is_null($calendar['g_calendars']) || $calendar['g_calendars'] == '')
-				$calendar['g_calendars'] = new stdClass();
+			    $calendar['g_calendars'] = new stdClass();
 			else
 				$calendar['g_calendars'] = json_decode($calendar['g_calendars']);
 			return $calendar;

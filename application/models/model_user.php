@@ -55,15 +55,35 @@ class Model_User extends Model{
 	function get_item_from_form(){
 		$google = $this->registry['google'];
 		$user = $google->get_user();
+		$start_date = DateTime::createFromFormat('Y-m-d', $_POST['start_date']);
+		if(!$start_date || !checkdate($start_date->format('m'), $start_date->format('d'), $start_date->format('Y')))
+			$start_date = date('Y') . '-09-01';
+		else
+			$start_date = $start_date->format('Y-m-d');
+		$end_date = DateTime::createFromFormat('Y-m-d', $_POST['end_date']);
+		if(!$end_date || !checkdate($end_date->format('m'), $end_date->format('d'), $end_date->format('Y')))
+			$end_date = (date('Y') + 1) . '-05-31';
+		else
+			$end_date = $end_date->format('Y-m-d');
 		$params = array(
-			"dual_week"	=> $_POST['dual_week'],
-			'timezone'	=> $_POST['timezone']
+			'dual_week'	=> $_POST['dual_week'],
+			'timezone'	=> $_POST['timezone'],
+			'start_date'=> $start_date,
+			'end_date'  => $end_date
 		);
-		$item = array('id'=>$user['id'], 'name'=>$_POST['name'], 'params'=>json_encode($params));
+		$item = array(
+			'id'	=> $user['id'],
+			'name'	=> $_POST['name'],
+			'params'=> json_encode($params)
+		);
 		return $item;
 	}
 
 	function register_user($google_id, $email, $hash){
+		$params = new stdClass();
+		$params->timezone = "Europe/Kiev";
+		$params->start_date = date('Y') . '-09-01';
+		$params->end_date = (date('Y') + 1) . '-05-31';
 		$this->db->query("INSERT INTO {$this->table_name} (google_id, email, hash) VALUES ('{$google_id}', '{$email}', '{$hash}')");
 	}
 
