@@ -1,4 +1,4 @@
-<h1><i class="uk-icon-google"></i>&nbsp;Календар <?php echo ($data['calendar']['name']) ? $data['calendar']['name'] : '[немає імені]'; ?></h1>
+<h1><i class="uk-icon-google"></i>&nbsp;Розклади <?php echo ($data['calendar']['name']) ? $data['calendar']['name'] : '[немає імені]'; ?></h1>
 <div class="uk-grid">
     <div class="uk-width-1-1 uk-width-medium-1-2">
         <ul class="uk-list uk-list-line">
@@ -78,26 +78,26 @@
                                 ?>
                             </td>
                             <?php
-                            foreach ($day as $lesson){
+                            foreach ($day as $lessons){
                                 ?>
                                 <td>
                                     <?php
-                                    $exist = false;
                                     $valid = true;
-                                    foreach ($lesson as $param){
-                                        if(!is_null($param))
-                                            $exist = true;
-                                        else
-                                            $valid = false;
+                                    foreach ($lessons as $lesson) {
+                                        foreach ($lesson as $param) {
+                                            if (is_null($param))
+                                                $valid = false;
+                                        }
                                     }
-                                    if($valid){
-                                        echo '<div class="uk-badge uk-badge-notification uk-badge-success">&nbsp;</div>';
-                                    } else {
-                                        if($exist)
+                                    if(count($lessons)){
+                                        if($valid)
+                                            echo '<div class="uk-badge uk-badge-notification uk-badge-success">' .
+                                             count($lessons) .
+                                             '</div>';
+                                        else
                                             echo '<div class="uk-badge uk-badge-notification uk-badge-danger" title="Один з параметрів не вказано (викладач, група, дисципліна чи аудиторія)">&nbsp;</div>';
-                                        else
-                                            echo '<div class="uk-badge uk-badge-notification uk-badge-muted">&nbsp;</div>';
-                                    }
+                                    } else
+                                        echo '<div class="uk-badge uk-badge-notification uk-badge-muted">&nbsp;</div>';
                                     ?>
                                 </td>
                                 <?php

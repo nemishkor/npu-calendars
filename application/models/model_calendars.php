@@ -108,16 +108,18 @@ class Model_Calendars extends Model
 			$events = $data['calendar']['events'];
 			foreach($events as $week){
 				foreach($week as $day){
-					foreach($day as $lesson){
-						if($lesson[0] != '' && $lesson[1] != '' && $lesson[2] != '' &&
-						$lesson[0] != null && $lesson[1] != null && $lesson[2] != null){
-							if(!in_array($lesson[0], $data['groups']))
+					foreach($day as $lessons){
+						foreach ($lessons as $lesson) {
+							if ($lesson[0] == '' || $lesson[1] == '' || $lesson[2] == '' ||
+								$lesson[0] == null || $lesson[1] == null || $lesson[2] == null)
+								continue;
+							if (!in_array($lesson[0], $data['groups']))
 								$groupsIds[] = $lesson[0];
-							if(!in_array($lesson[1], $data['courses']))
+							if (!in_array($lesson[1], $data['courses']))
 								$coursesIds[] = $lesson[1];
-							if(!in_array($lesson[2], $data['lectors']))
+							if (!in_array($lesson[2], $data['lectors']))
 								$lectorsIds[] = $lesson[2];
-							if(!in_array($lesson[3], $data['auditories']))
+							if (!in_array($lesson[3], $data['auditories']))
 								$auditoriesIds[] = $lesson[3];
 						}
 					}

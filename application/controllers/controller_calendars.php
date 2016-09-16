@@ -203,114 +203,116 @@ class Controller_Calendars extends Crud_Controller
             foreach ($week as $day_key => $day){
                 if($data['calendar']['dual_week'] == '0' && $week_key == 1)
                     continue;
-                foreach ($day as $lesson_key => $lesson) {
-                    if ($lesson[$field[$filter_name]] != $filter_id)
-                        continue;
-                    if (is_null($lesson[0]) || is_null($lesson[1]) || is_null($lesson[2]) || is_null($lesson[3]))
-                        continue;
-                    $group = $lesson[0];
-                    $course = $lesson[1];
-                    $lector = $lesson[2];
-                    $auditory = $lesson[3];
-                    foreach ($data['groups'] as $g)
-                        if ($group == $g['id'])
-                            $group = $g;
-                    foreach ($data['courses'] as $c)
-                        if ($course == $c['id'])
-                            $course = $c;
-                    foreach ($data['lectors'] as $l)
-                        if ($lector == $l['id'])
-                            $lector = $l;
-                    foreach ($data['auditories'] as $a)
-                        if ($auditory == $a['id'])
-                            $auditory = $a;
-                    if ($filter_name == 'group')
-                        $summary = $course['name'] . ' - ' . $lector['name'];
-                    elseif ($filter_name == 'course')
-                        $summary = $group['name'] . ' - ' . $lector['name'];
-                    elseif ($filter_name == 'lector')
-                        $summary = $group['name'] . ' - ' . $course['name'];
-                    elseif ($filter_name == 'auditory')
-                        $summary = $group['name'] . ' - ' . $lector['name'];
-                    else
-                        $summary = '$filter_name invalid value';
-                    $start = (is_null($data['calendar']['start_date'])) ? date('Y') . '-09-01' : $data['calendar']['start_date'];
-                    $end = $start;
-                    $until = (is_null($data['calendar']['end_date'])) ? (date('Y') + 1) . '-05-31' : $data['calendar']['end_date'];
-                    $start .= 'T';
-                    $end .= 'T';
-                    switch ($lesson_key) {
-                        case 0:
-                            $start .= '08:00:00';
-                            $end .= '09:20:00';
-                            break;
-                        case 1:
-                            $start .= '09:30:00';
-                            $end .= '10:50:00';
-                            break;
-                        case 2:
-                            $start .= '11:00:00';
-                            $end .= '12:20:00';
-                            break;
-                        case 3:
-                            $start = '12:30:00';
-                            $end = '13:50:00';
-                            break;
-                        case 4:
-                            $start .= '14:00:00';
-                            $end .= '15:50:00';
-                            break;
-                        case 5:
-                            $start .= '16:00:00';
-                            $end .= '17:20:00';
-                            break;
-                        case 6:
-                            $start .= '17:30:00';
-                            $end .= '18:50:00';
-                            break;
-                        case 7:
-                            $start .= '19:00:00';
-                            $end .= '20:20:00';
-                            break;
-                        case 8:
-                            $start .= '20:30:00';
-                            $end .= '21:50:00';
-                            break;
-                        default:
-                            $start .= '00:00:00';
-                            $end .= '00:00:00';
-                            break;
-                    }
-                    $recurrence = 'RRULE:FREQ=WEEKLY;';
-                    if ($data['calendar']['dual_week'] == "1")
-                        $recurrence .= 'INTERVAL=2;';
-                    $recurrence .= 'UNTIL=' . str_replace('-', '', $until) . 'T235959Z;';
-                    $recurrence .= 'WKST=MO;'; // day on which the workweek starts
-                    $byday = array('MO','TU','WE','TH','FR','SA');
-                    $recurrence .= 'BYDAY=' . $byday[$day_key] . ';';
-                    $event = new Google_Service_Calendar_Event(array(
-                        'summary' => $summary,
-                        'location' => $auditory['name'],
-                        'description' => $data['calendar']['name'],
-                        'start' => array(
-                            'dateTime' => $start,
-                            'timeZone' => $timezone,
-                        ),
-                        'end' => array(
-                            'dateTime' => $end,
-                            'timeZone' => $timezone,
-                        ),
-                        'recurrence' => array(
-                            $recurrence
-                        ),
-                        'reminders' => array(
-                            'useDefault' => FALSE,
-                            'overrides' => array(
-                                array('method' => 'popup', 'minutes' => 10),
+                foreach ($day as $lessons_key => $lessons) {
+                    foreach ($lessons as $lesson_key => $lesson) {
+                        if ($lesson[$field[$filter_name]] != $filter_id)
+                            continue;
+                        if (is_null($lesson[0]) || is_null($lesson[1]) || is_null($lesson[2]) || is_null($lesson[3]))
+                            continue;
+                        $group = $lesson[0];
+                        $course = $lesson[1];
+                        $lector = $lesson[2];
+                        $auditory = $lesson[3];
+                        foreach ($data['groups'] as $g)
+                            if ($group == $g['id'])
+                                $group = $g;
+                        foreach ($data['courses'] as $c)
+                            if ($course == $c['id'])
+                                $course = $c;
+                        foreach ($data['lectors'] as $l)
+                            if ($lector == $l['id'])
+                                $lector = $l;
+                        foreach ($data['auditories'] as $a)
+                            if ($auditory == $a['id'])
+                                $auditory = $a;
+                        if ($filter_name == 'group')
+                            $summary = $course['name'] . ' - ' . $lector['name'];
+                        elseif ($filter_name == 'course')
+                            $summary = $group['name'] . ' - ' . $lector['name'];
+                        elseif ($filter_name == 'lector')
+                            $summary = $group['name'] . ' - ' . $course['name'];
+                        elseif ($filter_name == 'auditory')
+                            $summary = $group['name'] . ' - ' . $lector['name'];
+                        else
+                            $summary = '$filter_name invalid value';
+                        $start = (is_null($data['calendar']['start_date'])) ? date('Y') . '-09-01' : $data['calendar']['start_date'];
+                        $end = $start;
+                        $until = (is_null($data['calendar']['end_date'])) ? (date('Y') + 1) . '-05-31' : $data['calendar']['end_date'];
+                        $start .= 'T';
+                        $end .= 'T';
+                        switch ($lesson_key) {
+                            case 0:
+                                $start .= '08:00:00';
+                                $end .= '09:20:00';
+                                break;
+                            case 1:
+                                $start .= '09:30:00';
+                                $end .= '10:50:00';
+                                break;
+                            case 2:
+                                $start .= '11:00:00';
+                                $end .= '12:20:00';
+                                break;
+                            case 3:
+                                $start = '12:30:00';
+                                $end = '13:50:00';
+                                break;
+                            case 4:
+                                $start .= '14:00:00';
+                                $end .= '15:50:00';
+                                break;
+                            case 5:
+                                $start .= '16:00:00';
+                                $end .= '17:20:00';
+                                break;
+                            case 6:
+                                $start .= '17:30:00';
+                                $end .= '18:50:00';
+                                break;
+                            case 7:
+                                $start .= '19:00:00';
+                                $end .= '20:20:00';
+                                break;
+                            case 8:
+                                $start .= '20:30:00';
+                                $end .= '21:50:00';
+                                break;
+                            default:
+                                $start .= '00:00:00';
+                                $end .= '00:00:00';
+                                break;
+                        }
+                        $recurrence = 'RRULE:FREQ=WEEKLY;';
+                        if ($data['calendar']['dual_week'] == "1")
+                            $recurrence .= 'INTERVAL=2;';
+                        $recurrence .= 'UNTIL=' . str_replace('-', '', $until) . 'T235959Z;';
+                        $recurrence .= 'WKST=MO;'; // day on which the workweek starts
+                        $byday = array('MO', 'TU', 'WE', 'TH', 'FR', 'SA');
+                        $recurrence .= 'BYDAY=' . $byday[$day_key] . ';';
+                        $event = new Google_Service_Calendar_Event(array(
+                            'summary' => $summary,
+                            'location' => $auditory['name'],
+                            'description' => $data['calendar']['name'],
+                            'start' => array(
+                                'dateTime' => $start,
+                                'timeZone' => $timezone,
                             ),
-                        ),
-                    ));
-                    $service->events->insert($g_calendar_id, $event);
+                            'end' => array(
+                                'dateTime' => $end,
+                                'timeZone' => $timezone,
+                            ),
+                            'recurrence' => array(
+                                $recurrence
+                            ),
+                            'reminders' => array(
+                                'useDefault' => FALSE,
+                                'overrides' => array(
+                                    array('method' => 'popup', 'minutes' => 10),
+                                ),
+                            ),
+                        ));
+                        $service->events->insert($g_calendar_id, $event);
+                    }
                 }
             }
         }
