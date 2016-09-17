@@ -98,6 +98,13 @@ class Controller_Calendars extends Crud_Controller
                             $new_saved_schedule = $filter_base['name of one item'] . '_' . $field['id'];
                             $data['calendar']['g_calendars']->$new_saved_schedule = $created_calendar['id'];
                             if (!empty($created_calendar['id'])) {
+                                $rule = new Google_Service_Calendar_AclRule();
+                                $scope = new Google_Service_Calendar_AclRuleScope();
+                                $scope->setType("default");
+                                $scope->setValue("default");
+                                $rule->setScope($scope);
+                                $rule->setRole("reader");
+                                $createdRule = $service->acl->insert($created_calendar['id'], $rule);
                                 $result = $this->model->set_g_calendars($data['calendar']['id'], json_encode($data['calendar']['g_calendars']));
                                 if ($result) {
                                     $info_msg[] = 'Розклад ' . $filter_base['second readable name'] . ' ' . $field['name'] . ' [' . $field['id'] . '] доданий до Google';
