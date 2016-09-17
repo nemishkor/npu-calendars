@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<?php
+$google = $this->registry->get('google');
+$user = $google->get_user();
+?><!DOCTYPE html>
 <html lang="ru">
 <head>
 	<meta charset="utf-8">
@@ -33,8 +36,7 @@
 
 			<ul class="uk-navbar-nav">
 				<?php
-				$google = $this->registry->get('google');
-				if($google->get_user()) {
+				if($user) {
 					?>
 					<li><a href="/auditories">Аудиторії</a></li>
 					<li><a href="/calendars">Календарі</a></li>
@@ -61,21 +63,32 @@
 		</nav>
 	</div>
 	<div class="uk-container uk-container-center uk-margin">
-		
+
 		<?php $this->widget('breadcrumbs'); ?>
-		
+
 		<?php
 		if(!empty($this->registry['error']))
 		echo '<p class="uk-alert uk-alert-danger" data-uk-alert><i class="uk-close uk-close-alert"></i><i class="uk-icon-exclamation-circle"></i> ' . $this->registry['error'] . '</p>';
 		if(!empty($this->registry['info']))
 		echo '<p class="uk-alert" data-uk-alert><i class="uk-close uk-close-alert"></i><i class="uk-icon-info"></i> ' . $this->registry['info'] . '</p>';
 		?>
-		
+
 		<?php include 'application/views/'.$content_view; ?>
 
-		<?php $this->widget('debug'); ?>
-		
 	</div>
-	
+
+	<?php
+	if($user){
+		?>
+		<hr>
+		<div class="uk-container uk-container-center uk-margin uk-text-small uk-text-center uk-text-muted">
+			<a href="/page/changelog">Список змін</a>
+		</div>
+		<?php
+	}
+	?>
+
+	<?php $this->widget('debug'); ?>
+
 </body>
 </html>

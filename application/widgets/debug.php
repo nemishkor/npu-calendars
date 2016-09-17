@@ -11,6 +11,7 @@ class Widget_Debug extends Widget{
         $user = $model->get_user();
         if(empty($user) || !$user['group_id'] != 1)
             return;
+        echo '<div class="uk-container uk-container-center uk-margin">';
 		if(!empty($this->registry['debug'])){
             echo '<span class="uk-margin-large-top uk-text-muted">debug</span>';
             echo '<pre>';
@@ -27,6 +28,7 @@ class Widget_Debug extends Widget{
 			</pre>
             <?php
         }
+        echo '</div>';
     }
 
 }

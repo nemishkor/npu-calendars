@@ -13,4 +13,8 @@ class Controller_Page extends Controller{
         $this->view->generate('pages/' . $page . '.php', 'template_full_screen_view.php');
     }
 
+    function action_changelog(){
+        $this->view->generate('pages/changelog.php', 'template_view.php');
+    }
+
 }
