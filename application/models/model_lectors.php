@@ -6,6 +6,31 @@ class Model_Lectors extends Model
 		$table_name = 'lectors';
 		parent::__construct($registry, $table_name);
 	}
+
+	function new_item($item = null){
+		$new_item = array(
+			'published'=>'1',
+			'name'=>'',
+			'surname'=>'',
+			'lastname'=>'',
+			'gender'=>'m',
+			'description'=>'',
+			'url'=>'',
+			'institute'=>'-1',
+		);
+		if(!is_null($item))
+			foreach($item as $item_key => $item_value)
+				foreach ($new_item as $new_item_key => $new_item_value)
+					if($item_key == $new_item_key)
+						$new_item[$new_item_key] = $item_value;
+		$google = $this->registry['google'];
+		$user = $google->get_user();
+		if(empty($user['id']))
+			$new_item['created_by'] = null;
+		else
+			$new_item['created_by'] = $user['id'];
+		return $new_item;
+	}
 	
 	function get_data($user_id){ // default data for index page
 		$query = "SELECT * FROM {$this->table_name}";
@@ -47,22 +72,35 @@ class Model_Lectors extends Model
 		} else
 			return false;
 	}
+
+	function save_obj($item){
+		$item = $this->new_item($item);
+		$query = "INSERT INTO `{$this->table_name}` VALUES(NULL, '{$item['published']}', '0', '{$item['created_by']}', '{$item['name']}', '{$item['surname']}', '{$item['lastname']}', '{$item['gender']}', '{$item['description']}', '{$item['url']}', '{$item['institute']}')";
+		$result = $this->db->query($query);
+		if($result){
+			return $this->db->insert_id;
+		} else
+			return false;
+	}
 	
 	function get_edit_item($id = null){ // data for edit page
 		if($id)
 			$item = $this->get_item($id);
-		else
-			$item = array( 
-				'published'=>'1',
-				'created_by'=>$user['id'],
-				'name'=>'', 
-				'surname'=>'', 
-				'lastname'=>'', 
-				'gender'=>'m', 
-				'description'=>'',
-				'url'=>'',
-				'institute'=>'-1',
-				);
+		else {
+			$google = $this->registry['google'];
+			$user = $google->get_user();
+			$item = array(
+				'published'   => '1',
+				'created_by'  => $user['id'],
+				'name' 		  => '',
+				'surname' 	  => '',
+				'lastname' 	  => '',
+				'gender' 	  => 'm',
+				'description' => '',
+				'url' 		  => '',
+				'institute'   => '-1',
+			);
+		}
 		$data = array('item'=>$item, 'institutes'=>$this->get_institutes());
 		return $data;
 	}

@@ -77,7 +77,7 @@ class Widget_Table extends Widget{
 						$output .= '<td class="' . $td_class . '"><a href="'.$cell.'" target="_blank"><i class="uk-icon-external-link"></i> '.$cell.'</a></td>';
 					else if($column->name == 'events'){
 						$output .= '<td class="' . $td_class . '">' . $this->display_events($cell) . '</td>';
-					} else if($column->name == 'g_calendar_id'){
+					} else if($column->name == 'g_calendars'){
 						$cell_text = ($cell) ? '<span class="uk-text-success"><i class="uk-icon-check"></i></span>' : '<span><i class="uk-icon-close"></i></span>';
                         $output .= '<td class="' . $td_class . '">' . $cell_text . '</td>';
 					} else
