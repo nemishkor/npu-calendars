@@ -16,7 +16,7 @@ class Route
 	{
 		$folder = 'korenev/';
 		// default controller
-		$controller_name = 'Calendars';
+		$controller_name = 'Page';
 		
 		$routes = explode('/', str_replace($folder, '', $_SERVER['REQUEST_URI']));
 		

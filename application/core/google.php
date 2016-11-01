@@ -22,11 +22,12 @@ class Google extends Model{
         $this->client->addScope(Google_Service_Calendar::CALENDAR);
 		$this->client->setAccessType('offline');
 		$this->client->setRedirectUri('http://' . $_SERVER['HTTP_HOST'] . '/user/oauth2callback');
+		$excludes = array('user', 'schedules', 'page');
 		if (!empty($_SESSION['access_token']) && isset($_SESSION['access_token']['id_token'])) {
 			$this->client->setAccessToken($_SESSION['access_token']);
 			$this->user_data = $this->client->verifyIdToken();
 		} else {
-			if($this->registry['controller_name'] != 'user') {
+			if(!in_array(strtolower($this->registry['controller_name']), $excludes)) {
 				$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/user/index';
 				header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 			}
@@ -86,7 +87,6 @@ class Google extends Model{
 	}
 	
 	function get_permission($permission_request){
-		// check permissions
 		$user = $this->get_user();
 		if($user){ // if user authenticated get current user permission
 			$permissions = $this->get_user_permissions($user['id']);
@@ -110,7 +110,7 @@ class Google extends Model{
 	}
 
 	function check_permission(){
-		return $this->get_permission($this->registry['controller_name'] . '_' . $this->registry['action_name']);
+		return $this->get_permission(strtolower($this->registry['controller_name']) . '_' . strtolower($this->registry['action_name']));
 	}
 	
 	function get_group_permissions($group_id){
@@ -122,50 +122,6 @@ class Google extends Model{
 			}
 		}
 		return false;
-	}
-	
-	function addCalendar($id = null){
-		//~ if(!$id)
-			//~ return false;
-		$data = array();
-		if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-			$this->client->setScopes(array(Google_Service_Calendar::CALENDAR));
-			$service = new Google_Service_Calendar($this->client);
-			$event = new Google_Service_Calendar_Event(array(
-			  'summary' => 'Google I/O 2015',
-			  'location' => '800 Howard St., San Francisco, CA 94103',
-			  'description' => 'A chance to hear more about Google\'s developer products.',
-			  'start' => array(
-				'dateTime' => '2015-05-28T09:00:00-07:00',
-				'timeZone' => 'America/Los_Angeles',
-			  ),
-			  'end' => array(
-				'dateTime' => '2015-05-28T17:00:00-07:00',
-				'timeZone' => 'America/Los_Angeles',
-			  ),
-			  'recurrence' => array(
-				'RRULE:FREQ=DAILY;COUNT=2'
-			  ),
-			  'attendees' => array(
-				array('email' => 'lpage@example.com'),
-				array('email' => 'sbrin@example.com'),
-			  ),
-			  'reminders' => array(
-				'useDefault' => FALSE,
-				'overrides' => array(
-				  array('method' => 'email', 'minutes' => 24 * 60),
-				  array('method' => 'popup', 'minutes' => 10),
-				),
-			  ),
-			));
-
-			$calendarId = 'primary';
-			$event = $service->events->insert($calendarId, $event);
-//			$data("Event created:", $event->htmlLink);
-		} else {
-		    $data['authUrl'] = $this->client->createAuthUrl();
-		}
-		return $data;
 	}
 	
 }

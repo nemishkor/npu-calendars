@@ -50,6 +50,26 @@ jQuery(document).ready(function(){
 					<input type="checkbox" name="dual_week" <?php if($params->dual_week) echo "checked"; ?>> 2-х тижневий розклад
 				</div>
 				<div class="uk-form-row">
+					<span>Часовий пояс </span>
+					<select name="timezone">
+						<?php
+						foreach($data['timezones'] as $timezone){
+							if($timezone == $params->timezone)
+								$checked = 'selected="selected"';
+							else
+								$checked = '';
+							echo '<option value="' . $timezone . '" ' . $checked . '>' . $timezone . '</option>';
+						}
+						?>
+					</select>
+				</div>
+				<div class="uk-form-row">
+					<label for="start_date">Початок навчання</label>
+					<input name="start_date" id="start_date" value="<?php echo $params->start_date; ?>">
+				</div>
+				<div class="uk-form-row">
+					<label for="end_date">Кінець навчання</label>
+					<input name="end_date" id="end_date" value="<?php echo $params->end_date; ?>">
 				</div>
 			</div>
 		</div>

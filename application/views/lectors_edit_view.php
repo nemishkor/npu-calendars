@@ -24,6 +24,18 @@ $institutes = $data['institutes'];
 <script>
 jQuery(document).ready(function(){
 	jQuery('.form-validate').submit(function(event){
+		var name = $(this).find('[name="name"]');
+		if($('[name="surname"]').val() == '' && $('[name="lastname"]').val() == ''){
+			var surNamePos = str.indexOf(' ');
+			var pos = surNamePos + 1;
+			var lastNamePos = name.indexOf(' ', pos);
+			var surName = name.substring(surNamePos, lastNamePos);
+			var lastName = name.substr(lastName);
+			if(surname && lastName){
+				$('[name="surname"]').val(surName);
+				$('[name="lastname"]').val(lastName);
+			}
+		}
 		var submit = true;
 		jQuery(this).find('.required').each(function(index, dom){
 			if(jQuery(this).val() == ''){

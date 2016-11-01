@@ -1,7 +1,6 @@
 <?php
 $calendar = $data['calendar'];
 $params = $data['params'];
-
 if(isset($_GET['id']) && $_GET['id'])
 	echo '<h1><i class="uk-icon-edit"></i> Редагувати календар</h1>'; 
 else
@@ -9,16 +8,38 @@ else
 ?>
 
 <style>
-.uk-modal td:hover{
-	cursor: pointer;
-}
-.uk-table tr{
-	transition: .4s all;
-}
-.uk-table tr.selected{
-    background-color: #35b3ee;
-    color: #ffffff;
-}
+	.uk-modal td:hover{
+		cursor: pointer;
+	}
+	.uk-table tr{
+		transition: .4s all;
+	}
+	.uk-table tr.selected{
+		background-color: #35b3ee;
+		color: #ffffff;
+	}
+	.lesson-values{
+		-webkit-animation: color-focus 0.4s linear 1s both;
+		-moz-animation: color-focus 0.4s linear 1s both;
+		-o-animation: color-focus 0.4s linear 1s both;
+		animation: color-focus 0.4s linear 1s both;
+	}
+	@-webkit-keyframes color-focus{
+		from{background-color: #b1ee8c;}
+		to	{background-color: transparent;}
+	}
+	@-moz-keyframes color-focus{
+		from{background-color: #b1ee8c;}
+		to	{background-color: transparent;}
+	}
+	@-o-keyframes color-focus{
+		from{background-color: #b1ee8c;}
+		to	{background-color: transparent;}
+	}
+	@keyframes color-focus{
+		from{background-color: #b1ee8c;}
+		to	{background-color: transparent;}
+	}
 </style>
 
 <script>
@@ -39,21 +60,12 @@ else
 				day.find('.day-name').text(dayNames[j]);
 				for(var k = 0; k < 9; k++){
 					var lesson = $('\
-					<div class="lesson">\
-						<div class="uk-grid" data-uk-margin>\
-							<div class="lesson-header uk-width-1-1">\
-								<span class="lesson-number"></span>\
-								<button class="lesson-add uk-button uk-button-small uk-button-success" type="button">Додати</button>\
-								<button class="lesson-edit uk-button uk-button-small uk-button-primary" type="button" disabled>Редагувати</button>\
-								<button class="lesson-delete uk-button uk-button-small uk-button-danger" type="button" disabled>Видалити</button>\
-							</div>\
-						<div class="lesson-values uk-width-1-1" style="display:none">\
-							<i class="uk-icon-users"></i> <span class="lesson-group"></span><br>\
-							<i class="uk-icon-book"></i> <span class="lesson-course"></span><br>\
-							<i class="uk-icon-mortar-board"></i> <span class="lesson-lector"></span><br>\
-							<i class="uk-icon-cube"></i> <span class="lesson-auditory"></span>\
-						</div>\
-					</div>');
+					<div class="lessons uk-grid" data-uk-margin>\
+                        <div class="lessons-header uk-width-1-1">\
+                            <span class="lesson-number"></span>\
+                            <button class="lesson-add uk-button uk-button-small uk-button-success" type="button">Додати</button>\
+                        </div>\
+                    </div>');
 					lesson.find('.lesson-number').text((k + 1) + ' - пара');
 					day.find('.day').append(lesson);
 					if(k != 8)
@@ -65,35 +77,42 @@ else
 		}
 		// fill form data from server
 		if(events){
-			for (var i = 0; i < 2; i++){
-				for (var j = 0; j < 6; j++){
-					for (var k = 0; k < 9; k++){
-						if(events[i][j][k][0] != '' && events[i][j][k][1] != '' && events[i][j][k][2] != '' &&
-						events[i][j][k][0] != null && events[i][j][k][1] != null && events[i][j][k][2] != null){
-							var lesson = $('.week').eq(i).find('.day').eq(j).find('.lesson').eq(k);
-							var group = getGroup(events[i][j][k][0]);
-							var course = getCourse(events[i][j][k][1]);
-							var lector = getLector(events[i][j][k][2]);
-							var auditory = getAuditory(events[i][j][k][3]);
-							lesson
+			for (i = 0; i < 2; i++){
+			    week = events[i];
+				for (j = 0; j < 6; j++){
+				    day = week[j];
+					for (k = 0; k < 9; k++){
+					    lessons = day[k];
+					    for (var m = 0; m < lessons.length; m++) {
+					    	console.log('finded lesson');
+							lesson = lessons[m];
+							console.log(lesson);
+							var newLesson = $($('.lesson-template').html());
+							var group = getGroup(lesson[0]);
+							var course = getCourse(lesson[1]);
+							var lector = getLector(lesson[2]);
+							var auditory = getAuditory(lesson[3]);
+							newLesson.find('.lesson-group').text(group['name']);
+							newLesson.find('.lesson-course').text(course['name']);
+							newLesson.find('.lesson-lector').text(lector['name']);
+							newLesson.find('.lesson-auditory').text(auditory['name']);
+							$('.week').eq(i).find('.day').eq(j)
+								.find('.lessons').eq(k).append(newLesson[0].outerHTML)
+								.find('.lesson')
 								.data('group', group['id'])
 								.data('course', course['id'])
 								.data('lector', lector['id'])
 								.data('auditory', auditory['id'])
-								.find('.lesson-add')
-								.attr('disabled', '')
-								.siblings()
-								.removeAttr('disabled');
-							lesson.find('.lesson-group').text(group['name']);
-							lesson.find('.lesson-course').text(course['name']);
-							lesson.find('.lesson-lector').text(lector['name']);
-							lesson.find('.lesson-auditory').text(auditory['name']);
-							lesson.find('.lesson-values').show(400);
+								.show();
 						}
 					}
 				}
 			}
 		}
+		// trigger delete lesson click
+		$('.lesson .lesson-delete').on('click', function(){
+			$(this).parents('.lesson').eq(0).hide(200, function(){ $(this).remove(); });
+		});
 	}
 	
 	function getGroup(id){
@@ -163,7 +182,10 @@ else
 			$('#modal-groups tbody').append(row);
 		}
 		$('#modal-groups tbody tr').on('click', function(){
-			$(this).addClass('selected').siblings().removeClass('selected');
+			if($(this).hasClass('selected'))
+				$(this).parents('.uk-modal-dialog').find('button.btn-save').first().click();
+			else
+				$(this).addClass('selected').siblings().removeClass('selected');
 		});
 	}
 	function addCourses(){
@@ -176,7 +198,10 @@ else
 			$('#modal-courses tbody').append(row);
 		}
 		$('#modal-courses tbody tr').on('click', function(){
-			$(this).addClass('selected').siblings().removeClass('selected');
+            if($(this).hasClass('selected'))
+                $(this).parents('.uk-modal-dialog').find('button.btn-save').first().click();
+            else
+                $(this).addClass('selected').siblings().removeClass('selected');
 		});
 	}
 	function addLectors(){
@@ -199,7 +224,10 @@ else
 			$('#modal-lectors tbody').append(row);
 		}
 		$('#modal-lectors tbody tr').on('click', function(){
-			$(this).addClass('selected').siblings().removeClass('selected');
+            if($(this).hasClass('selected'))
+                $(this).parents('.uk-modal-dialog').find('button.btn-save').first().click();
+            else
+                $(this).addClass('selected').siblings().removeClass('selected');
 		});
 	}
 	function addAudituries(){
@@ -219,18 +247,21 @@ else
 			$('#modal-auditories tbody').append(row);
 		}
 		$('#modal-auditories tbody tr').on('click', function(){
-			$(this).addClass('selected').siblings().removeClass('selected');
+            if($(this).hasClass('selected'))
+                $(this).parents('.uk-modal-dialog').find('button.btn-save').first().click();
+            else
+                $(this).addClass('selected').siblings().removeClass('selected');
 		});
 	}
 	
 	// steps when add or edit lesson 
 	function add_lesson0(event){
 		var btn = event.delegateTarget;
-		var modal = UIkit.modal('#modal-groups');
 		addGroups();
 		if(group)
 			$('#modal-groups tr[id=' + group + ']').click();
-		modal.show();
+		$('#modal-groups').css('display','block');
+		UIkit.modal('#modal-groups').show();
 	}
 	function add_lesson1(event){
 		var btn = event.delegateTarget;
@@ -239,14 +270,19 @@ else
 		    addLessonCancel();
 		if($(btn).hasClass('btn-save'))
 			if(selected.length){
-			    var modal = UIkit.modal('#modal-groups');
-			    modal.hide();
 				group = selected.data('id');
+				var modal = UIkit.modal('#modal-groups');
+				if(modal.isActive())
+					modal.hide();
 				addCourses();
 		        if(course)
 			        $('#modal-courses tr[id=' + course + ']').click();
-				var modal = UIkit.modal('#modal-courses');
-				modal.show();
+				$('#modal-groups').on({
+					'hide.uk.modal': function(){
+						if(group != null)
+							UIkit.modal('#modal-courses').show();
+					}
+				});
 			} else {
 				UIkit.notify("Натисніть на рядок в таблиці для вибору", {status:"warning"});
 			}
@@ -258,15 +294,18 @@ else
 		    addLessonCancel();
 		if($(btn).hasClass('btn-save'))
 			if(selected.length){
-			    var modal = UIkit.modal('#modal-courses');
-			    modal.hide();
-			    console.log("selected.data('id') = " + selected.data('id') + " in add_lesson1(event)");
 				course = selected.data('id');
+				var modal = UIkit.modal('#modal-courses');
+				modal.hide();
 				addLectors();
 		        if(lector)
 			        $('#modal-lectors tr[id=' + lector + ']').click();
-				var modal = UIkit.modal('#modal-lectors');
-				modal.show();
+				$('#modal-courses').on({
+					'hide.uk.modal': function(){
+						if(course != null)
+							UIkit.modal('#modal-lectors').show();
+					}
+				});
 			} else {
 				UIkit.notify("Натисніть на рядок в таблиці для вибору", {status:"warning"});
 			}
@@ -278,21 +317,23 @@ else
 		    addLessonCancel();
 		if($(btn).hasClass('btn-save'))
 			if(selected.length){
-			    var modal = UIkit.modal('#modal-lectors');
-			    modal.hide();
 				lector = selected.data('id');
+				var modal = UIkit.modal('#modal-lectors');
+				modal.hide();
 				addAudituries();
 		        if(auditory)
 			        $('#modal-auditories tr[id=' + auditory + ']').click();
-				var modal = UIkit.modal('#modal-auditories');
-				modal.show();
+				$('#modal-lectors').on({
+					'hide.uk.modal': function(){
+						if(lector != null)
+							UIkit.modal('#modal-auditories').show();
+					}
+				});
 			} else {
 				UIkit.notify("Натисніть на рядок в таблиці для вибору", {status:"warning"});
 			}
 	}
 	function add_lesson4(event){
-		console.log('add_lesson3()');
-		console.log(lesson);
 		var btn = event.delegateTarget;
 		var selected = $('#modal-auditories tbody tr.selected');
 		if($(btn).hasClass('btn-cancel'))
@@ -347,8 +388,11 @@ else
 		lesson.find('.lesson-course').text(courseName);
 		lesson.find('.lesson-lector').text(lectorName);
 		lesson.find('.lesson-auditory').text(auditoryName);
-		lesson.find('.lesson-values').show(400);
-		lesson.find('.lesson-add').attr('disabled', '').siblings().removeAttr('disabled');
+		lesson.fadeIn(400);
+		// trigger delete lesson click
+		lesson.find('.lesson-delete').on('click', function(){
+			$(this).parents('.lesson').eq(0).hide(200, function(){ $(this).remove(); });
+		});
 	}
 	
 	function addLessonCancel(){
@@ -356,54 +400,63 @@ else
 		course = null;
 		lector = null;
 		auditory = null;
+		lesson.remove();
 		lesson = null;
 		var modal = UIkit.modal('#modal-groups');
 		if(modal.isActive())
-		    modal.hide();
+			modal.hide();
 		modal = UIkit.modal('#modal-courses');
 		if(modal.isActive())
-		    modal.hide();
+			modal.hide();
 		modal = UIkit.modal('#modal-lectors');
 		if(modal.isActive())
-		    modal.hide();
+			modal.hide();
 		modal = UIkit.modal('#modal-auditories');
 		if(modal.isActive())
-		    modal.hide();
+			modal.hide();
 	}
 	
 	$(document).ready(function(){
 		init();
 		// add lesson click
-		$('.lesson .lesson-add').click(function(event){
+		$('.lessons .lesson-add').click(function(event){
 			group = null;
 			course = null;
 			lector = null;
 			auditory = null;
-			lesson = $(this).parents('.lesson').eq(0);
-		    console.log("$('.lesson .lesson-add').click()");
-		    console.log(lesson);
+			var newLesson = $($('.lesson-template').html());
+			$(this).parents('.lessons').append(newLesson);
+			lesson = $(this).parents('.lessons').find('.lesson').last();
 			add_lesson0(event);
 		});
 		$('#modal-groups .uk-modal-footer button').click(add_lesson1);
 		$('#modal-courses .uk-modal-footer button').click(add_lesson2);
 		$('#modal-lectors .uk-modal-footer button').click(add_lesson3);
 		$('#modal-auditories .uk-modal-footer button').click(add_lesson4);
-		// edit lesson click
-		$('.lesson .lesson-edit').click(function(event){
-		    lesson = $(this).parents('.lesson').eq(0);
-		    group = lesson.data('group');
-		    course = lesson.data('course');
-		    lector = lesson.data('lector');
-		    auditory = lesson.data('auditory');
-		    add_lesson0(event);
+		// fix for clicking on close(x) button in modal dialogs
+		$('#modal-groups').on({
+			'hide.uk.modal': function(){
+				if(group == null)
+					addLessonCancel();
+			}
 		});
-		// delete lesson click
-		$('.lesson .lesson-delete').click(function(){
-			lesson = $(this).parents('.lesson').eq(0);
-			lesson.data('group', '').data('course', '').data('lector', '').data('audistory', '');
-			lesson.find('.lesson-group, .lesson-course, .lesson-lector, .lesson-auditory').text('');
-		    lesson.find('.lesson-values').hide(400);
-			lesson.find('.lesson-add').removeAttr('disabled').siblings().attr('disabled', '');
+		$('#modal-courses').on({
+			'hide.uk.modal': function(){
+				if(course == null)
+					addLessonCancel();
+			}
+		});
+		$('#modal-lectors').on({
+			'hide.uk.modal': function(){
+				if(lector == null)
+					addLessonCancel();
+			}
+		});
+		$('#modal-auditories').on({
+			'hide.uk.modal': function(){
+				if(auditory == null)
+					addLessonCancel();
+			}
 		});
 	});
 	
@@ -426,32 +479,22 @@ else
 		<input type="radio" name="published" value="0" <?php if($calendar['published'] == '0') echo 'checked' ?>> Вимкнений
 	</div>
 	<div class="uk-form-row">
-		<input type="checkbox" name="dual_week" <?php if($params->dual_week == '1') echo 'checked'; ?>> 2-х тижневий розклад
+        <?php
+        if(empty($_GET['id'])){
+            $checked = ($params->dual_week == 'on') ? 'checked' : '';
+        } else {
+            $checked = ($calendar['dual_week'] == '1') ? 'checked' : '';
+        }
+        ?>
+		<input type="checkbox" name="dual_week" <?php echo $checked; ?>> 2-х тижневий розклад
 	</div>
 	<div class="uk-form-row">
-        <?php
-        $timezones = array(
-            'Europe/Amsterdam','Europe/Andorra','Europe/Astrakhan','Europe/Athens',
-            'Europe/BelgradeEurope/Berlin','Europe/Bratislava','Europe/Brussels',
-            'Europe/Bucharest','Europe/Budapest','Europe/Busingen','Europe/Chisinau',
-            'Europe/Copenhagen','Europe/Dublin','Europe/Gibraltar','Europe/Guernsey',
-            'Europe/Helsinki','Europe/Isle_of_Man','Europe/Istanbul','Europe/Jersey',
-            'Europe/Kaliningrad','Europe/Kiev','Europe/Kirov','Europe/Lisbon',
-            'Europe/Ljubljana','Europe/London','Europe/Luxembourg','Europe/Madrid',
-            'Europe/Malta','Europe/Mariehamn','Europe/Minsk','Europe/Monaco',
-            'Europe/Moscow','Europe/Oslo','Europe/Paris','Europe/Podgorica',
-            'Europe/Prague','Europe/Riga','Europe/Rome','Europe/Samara',
-            'Europe/San_Marino','Europe/Sarajevo','Europe/Simferopol','Europe/Skopje',
-            'Europe/Sofia','Europe/Stockholm','Europe/Tallinn','Europe/Tirane',
-            'Europe/Ulyanovsk','Europe/Uzhgorod','Europe/Vaduz','Europe/Vatican',
-            'Europe/Vienna','Europe/Vilnius','Europe/Volgograd','Europe/Warsaw',
-            'Europe/Zagreb','Europe/Zaporozhye','Europe/Zurich',
-        );
-        ?>
         <span>Часовий пояс </span>
 		<select name="timezone">
             <?php
-            foreach($timezones as $timezone){
+            foreach($data['timezones'] as $timezone){
+				if(is_null($calendar['timezone']))
+					$calendar['timezone'] = $params->timezone;
                 if($timezone == $calendar['timezone'])
                     $checked = 'selected="selected"';
                 else
@@ -460,6 +503,14 @@ else
             }
             ?>
         </select>
+	</div>
+	<div class="uk-form-row">
+		<label for="start_date">Початок навчання</label>
+		<input name="start_date" id="start_date" value="<?php echo $calendar['start_date']; ?>">
+	</div>
+	<div class="uk-form-row">
+		<label for="end_date">Кінець навчання</label>
+		<input name="end_date" id="end_date" value="<?php echo $calendar['end_date']; ?>">
 	</div>
 	<div class="uk-form-row">
 		<button type="submit" type="button" data-uk-button class="btn-save btn-action uk-button uk-button-primary"><i class="uk-icon-save"></i> Зберегти</button>
@@ -485,26 +536,31 @@ $(document).ready(function(){
 		var weeks = [];
 		for(var i = 0; i < 2; i++){
 			var week = [];
-			
 			for(var j = 0; j < 6; j++){
 				var day = [];
-				
 				for(var k = 0; k < 9; k++){
-					var lessonDom = $('.week').eq(i).find('.day').eq(j).find('.lesson').eq(k);
-					var l = [lessonDom.data('group'), lessonDom.data('course'), lessonDom.data('lector'), lessonDom.data('auditory')];
-					day.push(l);
+					var lessons = [];
+					var lessonsDom = $('.week').eq(i).find('.day').eq(j).find('.lessons').eq(k).find('.lesson');
+					if(lessonsDom.length) {
+						for (var m = 0; m < lessonsDom.length; m++) {
+							var l = [lessonsDom.eq(m).data('group'),
+									 lessonsDom.eq(m).data('course'),
+								 	 lessonsDom.eq(m).data('lector'),
+									 lessonsDom.eq(m).data('auditory') ];
+							lessons.push(l);
+						}
+					}
+					day.push(lessons);
 				}
-				
 				week.push(day);
 			}
-			
 			weeks.push(week);
 		}
-		if(!$("#<?php echo strtolower($this->registry['controller_name']); ?>-form [name='dual_week']:selected").length){
+		if($("#<?php echo strtolower($this->registry['controller_name']); ?>-form [name='dual_week']:selected").length){
 			weeks[1] = weeks[0];
 		}
 		$(this).find('[name=events]').val(JSON.stringify(weeks));
-		
+
 		//~ else
 		//~ if(btn.hasClass('btn-close'))
 			//~ action.val('close');
@@ -601,6 +657,21 @@ $(document).ready(function(){
             <button type="button" class="btn-cancel uk-button">Відміна</button>
             <button type="button" class="btn-save uk-button uk-button-primary">Вибрати та зберегти</button>
         </div>
+	</div>
+</div>
+
+<div class="lesson-template uk-hidden">
+	<div class="lesson uk-margin uk-width-1-1" style="display: none;">
+		<div class="uk-button-group">
+			<button class="lesson-edit uk-button uk-button-small uk-button-primary" type="button">Редагувати</button>
+			<button class="lesson-delete uk-button uk-button-small uk-button-danger" type="button">Видалити</button>
+			</div>
+		<div class="lesson-values uk-width-1-1 uk-margin-small-top">
+			<i class="uk-icon-users"></i> <span class="lesson-group"></span><br>
+			<i class="uk-icon-book"></i> <span class="lesson-course"></span><br>
+			<i class="uk-icon-mortar-board"></i> <span class="lesson-lector"></span><br>
+			<i class="uk-icon-cube"></i> <span class="lesson-auditory"></span>
+		</div>
 	</div>
 </div>
 
