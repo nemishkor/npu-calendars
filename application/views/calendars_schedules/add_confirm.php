@@ -28,9 +28,9 @@
             $events = $data['calendar']['events'];
             echo '<span class="uk-text-bold">2-х тижневий розклад: </span>';
             if(empty($data['calendar']['dual_week'])){
-                echo '<span class="uk-text-success"><i class="uk-icon-check"></i></span><br>';
-            } else {
                 echo '<span><i class="uk-icon-close"></i></span><br>';
+            } else {
+                echo '<span class="uk-text-success"><i class="uk-icon-check"></i></span><br>';
             }
             foreach ($events as $week_index=>$week) {
                 if(!empty($data['calendar']['dual_week'])){
