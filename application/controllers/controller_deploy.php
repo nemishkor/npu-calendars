@@ -10,11 +10,11 @@ class Controller_Deploy extends Controller
         $commands = array(
             'echo $PWD',
             'whoami',
-            'git pull',
-            'git status',
-            'git submodule sync',
-            'git submodule update',
-            'git submodule status',
+            '/usr/local/cpanel/3rdparty/bin/git pull',
+            '/usr/local/cpanel/3rdparty/bin/git status',
+            '/usr/local/cpanel/3rdparty/bin/git submodule sync',
+            '/usr/local/cpanel/3rdparty/bin/git submodule update',
+            '/usr/local/cpanel/3rdparty/bin/git submodule status',
         );
 
         // Run the commands for output
