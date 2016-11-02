@@ -22,7 +22,7 @@ class Google extends Model{
         $this->client->addScope(Google_Service_Calendar::CALENDAR);
 		$this->client->setAccessType('offline');
 		$this->client->setRedirectUri('http://' . $_SERVER['HTTP_HOST'] . '/user/oauth2callback');
-		$excludes = array('user', 'schedules', 'page');
+		$excludes = array('user', 'schedules', 'page', 'deploy');
 		if (!empty($_SESSION['access_token']) && isset($_SESSION['access_token']['id_token'])) {
 			$this->client->setAccessToken($_SESSION['access_token']);
 			$this->user_data = $this->client->verifyIdToken();
