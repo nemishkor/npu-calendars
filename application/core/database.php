@@ -1,8 +1,8 @@
 <?php
 class Database {
 	
-	public function __construct() {
-		
+	static public function getDb(){
+		return new mysqli("localhost", "", "", "");
 	}
 	
 }

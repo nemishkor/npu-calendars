@@ -12,7 +12,7 @@ class Model
 		}
 		$this->table_name = $table_name;
 		if(empty($this->registry['db'])) {
-			$this->db = new mysqli("localhost", "nemis206_tmp", "6LW{[!h_zJ?D", "nemis206_tmp");
+			$this->db = Database::getDb();
 			if ($this->db->connect_error) {
 				die('Ошибка подключения (' . $this->db->connect_errno . ') '
 					. $this->db->connect_error);
