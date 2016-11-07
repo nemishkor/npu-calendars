@@ -88,7 +88,11 @@ $user = $google->get_user();
 	}
 	?>
 
-	<?php $this->widget('debug'); ?>
+	<?php
+	$user_group_id = $google->get_user_group_id($user['id']);
+	if($user_group_id == 1 || $user_group_id == 2)
+		$this->widget('debug');
+	?>
 
 </body>
 </html>

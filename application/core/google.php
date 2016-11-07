@@ -112,6 +112,18 @@ class Google extends Model{
 	function check_permission(){
 		return $this->get_permission(strtolower($this->registry['controller_name']) . '_' . strtolower($this->registry['action_name']));
 	}
+
+	function get_user_group_id($user_id = null){
+		if(is_null($user_id)) {
+			$user = $this->get_user();
+			if(!empty($user['id']))
+				$user_id = $user['id'];
+		}
+		if(!$user_id)
+			return false;
+		$result = $this->db->query("SELECT group_id FROM users WHERE id='{$user_id}'");
+		return $result->fetch_assoc();
+	}
 	
 	function get_group_permissions($group_id){
 		$result = $this->db->query("SELECT permissions FROM users_groups WHERE id='{$group_id}'");
