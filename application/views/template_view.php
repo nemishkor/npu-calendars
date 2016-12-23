@@ -78,14 +78,7 @@ $user = $google->get_user();
 	</div>
 
 	<?php
-	if($user){
-		?>
-		<hr>
-		<div class="uk-container uk-container-center uk-margin uk-text-small uk-text-center uk-text-muted">
-			<a href="/page/changelog">Список змін</a>
-		</div>
-		<?php
-	}
+	include "footer.php";
 	?>
 
 	<?php
