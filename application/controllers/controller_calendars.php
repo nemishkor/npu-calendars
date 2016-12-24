@@ -261,6 +261,7 @@ class Controller_Calendars extends Crud_Controller
                                 $end .= '12:20:00';
                                 break;
                             case 3:
+                                // BUG O_o ??
                                 $start = '12:30:00';
                                 $end = '13:50:00';
                                 break;

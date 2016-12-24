@@ -3,7 +3,7 @@ class Controller_Settings extends Controller
 {	
 	function __construct($registry)
 	{
-		$this->model = new Model_Settings();
+		$this->model = new Model_Settings($registry);
 		$this->view = new View();
 		parent::__construct($registry);
 	}
