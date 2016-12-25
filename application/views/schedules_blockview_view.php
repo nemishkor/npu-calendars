@@ -88,14 +88,10 @@ $auditories = $data['auditories'];
                     var lessons = $('.week').eq(i).find('.day').eq(j).find('.lessons').eq(k);
                     for (var m = 0; m < lessons.length; m++) {
                         var lesson = lessons.find('.lesson').eq(m);
-                        console.log('m = ' + m);
-                        console.log("lesson.data('group') = " + lesson.data('group'));
-                        console.log("id = " + id);
                         if (type == "group" && lesson.data('group') == id ||
                             type == "course" && lesson.data('course') == id ||
                             type == "lector" && lesson.data('lector') == id ||
                             type == "auditory" && lesson.data('group') == id) {
-                            console.log('show lesson');
                             lesson.show();
                             if (type != 'group') {
                                 lesson.find('.lesson-group').show(400);
@@ -127,7 +123,6 @@ $auditories = $data['auditories'];
         for(var j = 0; j < groups.length; j++){
             if(id == groups[j]['id']){
                 return groups[j];
-                break;
             }
         }
     }
@@ -136,7 +131,6 @@ $auditories = $data['auditories'];
         for(var j = 0; j < courses.length; j++){
             if(id == courses[j]['id']){
                 return courses[j];
-                break;
             }
         }
     }
@@ -145,7 +139,6 @@ $auditories = $data['auditories'];
         for(var j = 0; j < lectors.length; j++){
             if(id == lectors[j]['id']){
                 return lectors[j];
-                break;
             }
         }
     }
@@ -154,7 +147,6 @@ $auditories = $data['auditories'];
         for(var j = 0; j < auditories.length; j++){
             if(id == auditories[j]['id']){
                 return auditories[j];
-                break;
             }
         }
     }
