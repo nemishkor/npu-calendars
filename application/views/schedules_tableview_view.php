@@ -194,6 +194,7 @@ $auditories = $data['auditories'];
     </div>
 
     <div class="weeks">
+        <button id="fullscreen-toggle" class="uk-button uk-position-absolute uk-position-top-left"><i class="uk-icon-expand"></i></button>
         <button id="table-colors-switcher" class="uk-button uk-position-absolute uk-position-top-left">
             <img src="/images/rgb.png"> <span class="hide-colors">Прибрати кольори</span><span class="show-colors">Кольоровий варіант</span>
         </button>
@@ -350,6 +351,10 @@ $auditories = $data['auditories'];
             $('#table-colors-switcher').click(function(){
                 $(this).toggleClass('active');
                 $('.table-schedule').toggleClass('colored');
+            });
+            $('#fullscreen-toggle').click(function(){
+                $(this).find('i').toggleClass('uk-icon-expand').toggleClass('uk-icon-compress');
+                $('.weeks').toggleClass('fullscreen');
             });
         });
     })(jQuery);
