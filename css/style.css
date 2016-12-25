@@ -8,3 +8,180 @@
 .acces-role-owner:after{
     content: " - власник";
 }
+
+
+
+
+
+/* schedules */
+#table-colors-switcher{
+    top: 1px;
+    left: 3px;
+    padding: 1px 24px;
+    height: 36px;
+    white-space: nowrap;
+}
+#table-colors-switcher img{
+    vertical-align: top;
+    transition: .4s all;
+}
+#table-colors-switcher:hover img,
+#table-colors-switcher.active:hover img{
+    -webkit-filter: saturate(0.5);
+    filter: saturate(0.5);
+}
+#table-colors-switcher.active img{
+    -webkit-filter: saturate(0);
+    filter: saturate(0);
+    transform: rotate(360deg);
+}
+.hide-colors, .show-colors{
+    display: inline-block;
+    width: 0;
+    transition: 0.4s width;
+    overflow: hidden;
+}
+#table-colors-switcher:not(.active):hover .hide-colors{
+    width: 120px;
+}
+#table-colors-switcher.active:hover .show-colors{
+    width: 130px;
+}
+
+.table-schedule.colored td{
+    border: 1px solid #dddddd;
+}
+
+.table-schedule.colored thead th:nth-child(1),
+.table-schedule.colored thead th:nth-child(2){
+    background-color: transparent;
+    border-bottom: none;
+}
+.table-schedule thead th{
+    padding:0;
+}
+.table-schedule.colored thead th div{
+    background-color: #00a8e6;
+    color: #fff;
+}
+.table-schedule thead th > div > div{
+    padding: 10px;
+}
+.table-schedule.colored thead th:nth-child(3) div{
+    border-radius: 4px 0 0 0;
+}
+.table-schedule.colored thead th:last-child div{
+    border-radius: 0 4px 0 0;
+}
+
+.table-schedule tbody td.day-name{
+    border-left: none;
+    width: 2.5rem;
+    padding: 0;
+}
+.table-schedule.colored tbody td.day-name{
+    color: #fff;
+}
+.table-schedule tbody td.day-name span{
+    -moz-transform: rotate(-90.0deg);
+    -o-transform: rotate(-90.0deg);
+    -webkit-transform: rotate(-90.0deg);
+    filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=0.083);
+    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)";
+    transform: rotate(-90.0deg);
+    display: inline-block;
+    width: 1rem;
+}
+
+.table-schedule td.lesson-number,
+.table-schedule td.lesson-time{
+    width: 40px;
+}
+
+.table-schedule.colored tbody tr{
+    transition: 0.2s all;
+}
+.table-schedule.colored tbody tr.day-1{
+    background-color: #E8EAF6;
+}
+.table-schedule.colored tbody tr.day-1 td.day-name{
+    background-color: #3F51B5;
+    border-radius: 5px 0 0 0;
+    border-top: none;
+}
+.table-schedule.colored tbody tr.day-2{
+    background-color: #E3F2FD;
+}
+.table-schedule.colored tbody tr.day-2 td.day-name{
+    background-color: #2196F3;
+}
+.table-schedule.colored tbody tr.day-3{
+    background-color: #E1F5FE;
+}
+.table-schedule.colored tbody tr.day-3 td.day-name{
+    background-color: #039BE5;
+}
+.table-schedule.colored tbody tr.day-4{
+    background-color: #E0F7FA;
+}
+.table-schedule.colored tbody tr.day-4 td.day-name{
+    background-color: #0097A7;
+}
+.table-schedule.colored tbody tr.day-5{
+    background-color: #E0F2F1;
+}
+.table-schedule.colored tbody tr.day-5 td.day-name{
+    background-color: #009688;
+}
+.table-schedule.colored tbody tr.day-6{
+    background-color: #E8F5E9;
+}
+.table-schedule.colored tbody tr.day-6 td.day-name{
+    background-color: #43A047;
+    border-radius: 0 0 0 5px;
+    border-bottom: none;
+}
+
+.table-schedule.colored tbody tr.day-1:nth-of-type(4n - 1),
+.table-schedule.colored tbody tr.day-1:nth-of-type(4n){
+    background-color: #d6d9ef;
+}
+.table-schedule.colored tbody tr.day-1.hover{
+    background-color: #C5CAE9;
+}
+.table-schedule.colored tbody tr.day-2:nth-of-type(4n - 1),
+.table-schedule.colored tbody tr.day-2:nth-of-type(4n){
+    background-color: #d4eafd;
+}
+.table-schedule.colored tbody tr.day-2.hover{
+    background-color: #BBDEFB;
+}
+.table-schedule.colored tbody tr.day-3:nth-of-type(4n - 1),
+.table-schedule.colored tbody tr.day-3:nth-of-type(4n){
+    background-color: #d0f0ff;
+}
+.table-schedule.colored tbody tr.day-3.hover{
+    background-color: #B3E5FC;
+}
+.table-schedule.colored tbody tr.day-4:nth-of-type(4n - 1),
+.table-schedule.colored tbody tr.day-4:nth-of-type(4n){
+    background-color: #d1eff3;
+}
+.table-schedule.colored tbody tr.day-4.hover{
+    background-color: #B2EBF2;
+}
+.table-schedule.colored tbody tr.day-5:nth-of-type(4n - 1),
+.table-schedule.colored tbody tr.day-5:nth-of-type(4n){
+    background-color: #cef1ed;
+}
+.table-schedule.colored tbody tr.day-5.hover{
+    background-color: #B2DFDB;
+}
+.table-schedule.colored tbody tr.day-6:nth-of-type(4n - 1),
+.table-schedule.colored tbody tr.day-6:nth-of-type(4n){
+    background-color: #d9ecda;
+}
+.table-schedule.colored tbody tr.day-6.hover{
+    background-color: #C8E6C9;
+}
+

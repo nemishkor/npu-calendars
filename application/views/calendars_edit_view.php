@@ -4,7 +4,7 @@ $params = $data['params'];
 if(isset($_GET['id']) && $_GET['id'])
 	echo '<h1><i class="uk-icon-edit"></i> Редагувати календар</h1>'; 
 else
-	echo '<h1><i class="uk-icon-plus"></i> Додати календар</h1>'; 
+	echo '<h1><i class="uk-icon-plus"></i> Додати календар</h1>';
 ?>
 
 <style>
@@ -119,7 +119,6 @@ else
 		for(var j = 0; j < groups.length; j++){
 			if(id == groups[j]['id']){
 				return groups[j];
-				break;
 			}
 		}
 	}
@@ -128,7 +127,6 @@ else
 		for(var j = 0; j < courses.length; j++){
 			if(id == courses[j]['id']){
 				return courses[j];
-				break;
 			}
 		}
 	}
@@ -137,7 +135,6 @@ else
 		for(var j = 0; j < lectors.length; j++){
 			if(id == lectors[j]['id']){
 				return lectors[j];
-				break;
 			}
 		}
 	}
@@ -146,7 +143,6 @@ else
 		for(var j = 0; j < auditories.length; j++){
 			if(id == auditories[j]['id']){
 				return auditories[j];
-				break;
 			}
 		}
 	}
@@ -166,7 +162,8 @@ else
 	
 	// adding data to tables in modal
 	function addGroups(){
-		$('#modal-groups tbody').html('');
+		var modalGroupsTable = $('#modal-groups tbody');
+		modalGroupsTable.html('');
 		for(var i = 0; i < groups.length; i++){
 			var row = $('<tr></tr>');
 			row.data('id', groups[i]['id']).attr('id', groups[i]['id']);
@@ -179,7 +176,7 @@ else
 				}
 			}
 			row.append('<td>' + instituteName + '</td>');
-			$('#modal-groups tbody').append(row);
+			modalGroupsTable.append(row);
 		}
 		$('#modal-groups tbody tr').on('click', function(){
 			if($(this).hasClass('selected'))
@@ -356,19 +353,20 @@ else
 			.data('lector', lector)
 			.data('auditory', auditory);
 		var groupName, courseName, lectorName, auditoryName;
-		for(var i = 0; i < groups.length; i++){
+		var i;
+		for(i = 0; i < groups.length; i++){
 			if(groups[i]['id'] == group){
 				groupName = groups[i]['name'];
 				break;
 			}
 		}
-		for(var i = 0; i < courses.length; i++){
+		for(i = 0; i < courses.length; i++){
 			if(courses[i]['id'] == course){
 				courseName = courses[i]['name'];
 				break;
 			}
 		}
-		for(var i = 0; i < lectors.length; i++){
+		for(i = 0; i < lectors.length; i++){
 			if(lectors[i]['id'] == lector){
 				lectorName = lectors[i]['name'];
 				if(lectors[i]['surname'])
@@ -378,7 +376,7 @@ else
 				break;
 			}
 		}
-		for(var i = 0; i < auditories.length; i++){
+		for(i = 0; i < auditories.length; i++){
 			if(auditories[i]['id'] == auditory){
 				auditoryName = auditories[i]['name'];
 				break;

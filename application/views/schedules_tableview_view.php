@@ -19,43 +19,8 @@ $auditories = $data['auditories'];
     var lectors = <?php echo json_encode($data['lectors']); ?>;
     var events = <?php if($calendar) echo json_encode($calendar['events']); else echo 'null'; ?>;
     var schedules = <?php echo json_encode($calendar['g_calendars']); ?>;
-    // create events UI and fill data to them
-
-    function getGroup(id){
-        for(var j = 0; j < groups.length; j++){
-            if(id == groups[j]['id']){
-                return groups[j];
-            }
-        }
-    }
-
-    function getCourse(id){
-        for(var j = 0; j < courses.length; j++){
-            if(id == courses[j]['id']){
-                return courses[j];
-            }
-        }
-    }
-
-    function getLector(id){
-        for(var j = 0; j < lectors.length; j++){
-            if(id == lectors[j]['id']){
-                return lectors[j];
-            }
-        }
-    }
-
-    function getAuditory(id){
-        for(var j = 0; j < auditories.length; j++){
-            if(id == auditories[j]['id']){
-                return auditories[j];
-            }
-        }
-    }
 
     $(document).ready(function(){
-        init();
-
     });
 </script>
 
@@ -90,107 +55,144 @@ $auditories = $data['auditories'];
            style="display: none;">Додати до свого календаря Google</a>
     </div>
 
-    <div class="weeks">
-        <?php
-        for($i = 0; $i <= $calendar['dual_week']; $i++){
-            ?>
-            <table class="uk-table">
-                <thead>
-                <th>
-                    <td></td>
-                    <?php
-                    foreach ($groups as $group)
-                        echo '<td class="group-' . $group['id'] . '">' . $group['name'] . '</td>';
-                    ?>
-                </th>
-                </thead>
-                <tbody>
+    <div class="weeks uk-position-relative">
+        <button id="table-colors-switcher" class="uk-button uk-position-absolute uk-position-top-left">
+            <img src="/images/rgb.png"> <span class="hide-colors">Прибрати кольори</span><span class="show-colors">Кольоровий варіант</span>
+        </button>
+        <table class="table-schedule colored uk-table uk-text-center uk-table-condensed">
+            <thead>
+            <tr>
+                <th></th>
+                <th></th>
                 <?php
-                $day_names = ['Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця', 'Субота'];
-                foreach ($day_names as $day_number => $day_name){
-                    for($l = 0; $l < 9; $l++){
-                        ?>
-                        <tr>
-                            <?php if($l == 0){ ?>
-                                <td rowspan="18"><?php echo $day_name; ?></td>
-                            <?php } ?>
-                            <td><?php echo $l + 1; ?></td>
-                            <?php
-                            foreach ($groups as $group){
-                                echo '<td>';
-                                $day = $events[0][$day_number];
-                                foreach ($day as $ex)
-                                    foreach ($ex as $lesson){
-                                        if($lesson[0] == $group['id']){
-                                            ?>
-                                            дисципліна - <?php echo $lesson ?>
-                                            <?php
-                                        }
-                                    }
-                                echo '</td>';
-                            } // groups
-                            ?>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php
-                                switch ($l) {
-                                    case 0:
-                                        $start = '08:00';
-                                        $end = '09:20';
-                                        break;
-                                    case 1:
-                                        $start = '09:30';
-                                        $end = '10:50';
-                                        break;
-                                    case 2:
-                                        $start = '11:00';
-                                        $end = '12:20';
-                                        break;
-                                    case 3:
-                                        $start = '12:30';
-                                        $end = '13:50';
-                                        break;
-                                    case 4:
-                                        $start = '14:00';
-                                        $end = '15:50';
-                                        break;
-                                    case 5:
-                                        $start = '16:00';
-                                        $end = '17:20';
-                                        break;
-                                    case 6:
-                                        $start = '17:30';
-                                        $end = '18:50';
-                                        break;
-                                    case 7:
-                                        $start = '19:00';
-                                        $end = '20:20';
-                                        break;
-                                    case 8:
-                                        $start = '20:30';
-                                        $end = '21:50';
-                                        break;
-                                    default:
-                                        $start = '00:00';
-                                        $end = '00:00';
-                                        break;
-                                }
-                                echo $start . '<br>-<br>' . $end;
-                                ?>
-                            </td>
-                        </tr>
-                        <?php
-                    }
-                }
+                foreach ($groups as $group)
+                    echo '<th class="group-' . $group['id'] . ' uk-text-center"><div data-uk-sticky>' . $group['name'] . '</div></th>';
                 ?>
-                </tbody>
-            </table>
+            </tr>
+            </thead>
+            <tbody>
             <?php
-        }
+            $day_names = ['Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця', 'Субота'];
+            foreach ($day_names as $day_number => $day_name){
+                for($l = 0; $l < 9; $l++){
+                    // find all lessons for the time interval (for example 8:00 - 9:20) for 2 weeks
+                    $exs = array();
+                    foreach ($groups as $group){
+                        $first_week_lesson = null;
+                        $ex = $events[0][$day_number][$l];
+                        foreach ($ex as $lesson)
+                            if ($lesson[0]['id'] == $group['id']){
+                                $first_week_lesson = $lesson[1]['name'] . '<br>' . $lesson[2]['name'] . '<br>' . $lesson[3]['name'];
+                            }
+                        $second_week_lesson = null;
+                        if($calendar['dual_week']){
+                            $ex = $events[1][$day_number][$l];
+                            foreach ($ex as $lesson)
+                                if ($lesson[0]['id'] == $group['id'])
+                                {
+                                    $second_week_lesson = $lesson[1]['name'] . '<br>' . $lesson[2]['name'] . '<br>' . $lesson[3]['name'];
+                                }
+                        }
+                        $exs[] = array($first_week_lesson, $second_week_lesson);
+                    }
+                    ?>
+                    <tr class="day-<?php echo $day_number + 1; ?> uk-table-middle" data-lesson="<?php echo $l + 1; ?>">
+                        <?php if($l == 0){ ?>
+                            <td rowspan="18" class="day-name"><span><?php echo $day_name; ?></span></td>
+                        <?php } ?>
+                        <td class="lesson-number"><?php echo $l + 1; ?></td>
+                        <?php
+                        foreach ($groups as $group_key => $group){
+                            echo '<td ' . ((!$exs[$group_key][1]) ? 'rowspan="2"' : '') . '>';
+                            echo $exs[$group_key][0];
+                            echo '</td>';
+                        }
+                        ?>
+                    </tr>
+                    <tr class="day-<?php echo $day_number + 1; ?> uk-table-middle" data-lesson="<?php echo $l + 1; ?>">
+                        <td class="lesson-time">
+                            <?php
+                            switch ($l) {
+                                case 0:
+                                    $start = '08:00';
+                                    $end = '09:20';
+                                    break;
+                                case 1:
+                                    $start = '09:30';
+                                    $end = '10:50';
+                                    break;
+                                case 2:
+                                    $start = '11:00';
+                                    $end = '12:20';
+                                    break;
+                                case 3:
+                                    $start = '12:30';
+                                    $end = '13:50';
+                                    break;
+                                case 4:
+                                    $start = '14:00';
+                                    $end = '15:50';
+                                    break;
+                                case 5:
+                                    $start = '16:00';
+                                    $end = '17:20';
+                                    break;
+                                case 6:
+                                    $start = '17:30';
+                                    $end = '18:50';
+                                    break;
+                                case 7:
+                                    $start = '19:00';
+                                    $end = '20:20';
+                                    break;
+                                case 8:
+                                    $start = '20:30';
+                                    $end = '21:50';
+                                    break;
+                                default:
+                                    $start = '00:00';
+                                    $end = '00:00';
+                                    break;
+                            }
+                            echo $start . '<br>-<br>' . $end;
+                            ?>
+                        </td>
+                        <?php
+                        foreach ($groups as $group_key => $group){
+                            if($exs[$group_key][1]){
+                                echo '<td>';
+                                echo $exs[$group_key][1];
+                                echo '</td>';
+                            }
+                        }
+                        ?>
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+            </tbody>
+        </table>
+        <?php
         echo '<pre>';
-        var_dump($calendar);
+
         echo '</pre>';
         ?>
     </div>
 </div>
+
+<script>
+    (function($) {
+        $(function() {
+            $('.table-schedule tr').hover(function(){
+                $('tr[data-lesson="' + $(this).data("lesson") + '"]').addClass('hover');
+            }, function(){
+                $('tr[data-lesson="' + $(this).data("lesson") + '"]').removeClass('hover');
+            });
+            $('#table-colors-switcher').click(function(){
+                $(this).toggleClass('active');
+                $('.table-schedule').toggleClass('colored');
+            });
+        });
+    })(jQuery);
+</script>

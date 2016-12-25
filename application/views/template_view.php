@@ -24,6 +24,9 @@ $user = $google->get_user();
 	
 	<script src="/js/components/tooltip.min.js"></script>
 	<link rel="stylesheet" href="/css/components/tooltip.css">
+
+	<script src="/js/components/sticky.min.js"></script>
+	<link rel="stylesheet" href="/css/components/sticky.css">
 	
 	<script src="/js/core/toggle.js"></script>
 	<script src="/js/core/switcher.js"></script>
