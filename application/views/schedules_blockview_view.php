@@ -201,7 +201,7 @@ $auditories = $data['auditories'];
                 <div class="courses-filter uk-accordion-content">
                     <?php
                     foreach($courses as $course){
-                        echo '<button class="uk-button uk-button-large uk-margin-right" data-id="' . $courses['id'] . '">' . $course['name'] . '</button>';
+                        echo '<button class="uk-button uk-button-large uk-margin-right" data-id="' . $course['id'] . '">' . $course['name'] . '</button>';
                     }
                     ?>
                 </div>
