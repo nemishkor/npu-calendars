@@ -16,6 +16,8 @@ class Model_User extends Model{
 		$row = $result->fetch_assoc();
 		if($this->registry['action_name'] == 'edit') {
 			$row["params"] = json_decode($row['params']);
+			if(!isset($row['params']->shared_with))
+				$row['params']->shared_with = array();
 		}
 		$model_calendars = new Model_Calendars($this->registry);
 		$data['timezones'] = $model_calendars->get_timezones();
@@ -65,11 +67,18 @@ class Model_User extends Model{
 			$end_date = (date('Y') + 1) . '-05-31';
 		else
 			$end_date = $end_date->format('Y-m-d');
+		$shared_with = !empty($_POST['shared_with']) ? $_POST['shared_with'] : array();
+		foreach ($shared_with as $key => $email){
+			if($email == "")
+				unset($shared_with[$key]);
+		}
+		$this->registry->set('debug', $shared_with);
 		$params = array(
-			'dual_week'	=> $_POST['dual_week'],
-			'timezone'	=> $_POST['timezone'],
-			'start_date'=> $start_date,
-			'end_date'  => $end_date
+			'dual_week'	  => $_POST['dual_week'],
+			'timezone'	  => $_POST['timezone'],
+			'start_date'  => $start_date,
+			'end_date'    => $end_date,
+			'shared_with' => $shared_with
 		);
 		$item = array(
 			'id'	=> $user['id'],
