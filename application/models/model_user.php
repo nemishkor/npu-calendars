@@ -11,13 +11,14 @@ class Model_User extends Model{
 		$data = array();
 		$google = $this->registry['google'];
 		$user = $google->get_user();
-		$query = "SELECT u.id,u.email,u.name,u.params,g.id AS group_id,g.name AS group_name FROM {$this->table_name} AS u LEFT JOIN users_groups AS g ON u.group_id=g.id WHERE u.id={$user['id']}";
+		$query = "SELECT u.id,u.email,u.name,u.params,u.full_access,g.id AS group_id,g.name AS group_name FROM {$this->table_name} AS u LEFT JOIN users_groups AS g ON u.group_id=g.id WHERE u.id={$user['id']}";
 		$result = $this->db->query($query);
 		$row = $result->fetch_assoc();
 		if($this->registry['action_name'] == 'edit') {
 			$row["params"] = json_decode($row['params']);
-			if(!isset($row['params']->shared_with))
-				$row['params']->shared_with = array();
+			if($row['full_access'] == null)
+				$row['full_access'] = array();
+			$row["full_access"] = json_decode($row['full_access']);
 		}
 		$model_calendars = new Model_Calendars($this->registry);
 		$data['timezones'] = $model_calendars->get_timezones();
@@ -27,7 +28,7 @@ class Model_User extends Model{
 	
 	function save(){
 		$item = $this->get_item_from_form();
-		$query = "UPDATE {$this->table_name} SET name='{$item['name']}',params='{$item['params']}' WHERE id='{$item['id']}'";
+		$query = "UPDATE {$this->table_name} SET name='{$item['name']}',params='{$item['params']}',full_access='{$item['full_access']}' WHERE id='{$item['id']}'";
 		$result = $this->db->query($query);
 		if($result){
 			return $item['id'];
@@ -67,23 +68,22 @@ class Model_User extends Model{
 			$end_date = (date('Y') + 1) . '-05-31';
 		else
 			$end_date = $end_date->format('Y-m-d');
-		$shared_with = !empty($_POST['shared_with']) ? $_POST['shared_with'] : array();
-		foreach ($shared_with as $key => $email){
-			if($email == "")
-				unset($shared_with[$key]);
-		}
-		$this->registry->set('debug', $shared_with);
 		$params = array(
 			'dual_week'	  => $_POST['dual_week'],
 			'timezone'	  => $_POST['timezone'],
 			'start_date'  => $start_date,
-			'end_date'    => $end_date,
-			'shared_with' => $shared_with
+			'end_date'    => $end_date
 		);
+		$full_access = !empty($_POST['full_access']) ? $_POST['full_access'] : array();
+		foreach ($full_access as $key => $email){
+			if($email == "")
+				unset($full_access[$key]);
+		}
 		$item = array(
 			'id'	=> $user['id'],
 			'name'	=> $_POST['name'],
-			'params'=> json_encode($params)
+			'params'=> json_encode($params),
+			'full_access' => json_encode($full_access)
 		);
 		return $item;
 	}

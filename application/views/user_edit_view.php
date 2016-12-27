@@ -29,10 +29,10 @@ $params = $user['params'];
 				<p class="uk-text-muted">Щоб надати повний доступ до Ваших даних (аудиторій, календарів, дисциплін та ін.), вкажіть нижче їхні gmail логіни</p>
 				<div id="shared-with-list" class="uk-form-row">
 					<?php
-					foreach ($params->shared_with as $email){
+					foreach ($user['full_access'] as $email){
 						echo '<div class="uk-form-row">
-								<input type="text" name="shared_with[]" placeholder="example@gmail.com" value="' . $email . '">
-								<button class="remove-shared-email uk-button-icon uk-icon-close"></button>
+								<input type="text" name="full_access[]" placeholder="example@gmail.com" value="' . $email . '">
+								<button class="remove-shared-email uk-button uk-icon-close"></button>
 							</div>';
 					}
 					?>
@@ -95,7 +95,7 @@ $params = $user['params'];
 					action.val('new');
 			});
 			$('#add-shared-email').click(function(e){
-				$('#shared-with-list').append('<div class="uk-form-row"><input type="text" name="shared_with[]" placeholder="example@gmail.com"> <button class="remove-shared-email uk-button-icon uk-icon-close"></button></div>');
+				$('#shared-with-list').append('<div class="uk-form-row"><input type="text" name="full_access[]" placeholder="example@gmail.com"> <button class="remove-shared-email uk-button uk-icon-close"></button></div>');
 				e.preventDefault();
 			}).click();
 			$('.remove-shared-email').click(function(e){

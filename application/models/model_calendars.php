@@ -28,7 +28,7 @@ class Model_Calendars extends Model
 		return $timezones;
 	}
 	
-	function get_data($user_id)
+	function get_data($user_id, $user_email)
 	{
 		$data = array();
 		$google = $this->registry['google'];

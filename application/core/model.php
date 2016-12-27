@@ -37,7 +37,7 @@ class Model
 			return false;
 	}
 
-	function get_data($user_id){ // default data for index page
+	function get_data($user_id, $user_email){ // default data for index page
 		$query = "SELECT * FROM {$this->table_name}";
 		if($user_id)
 			$query .= " WHERE created_by='{$user_id}'";

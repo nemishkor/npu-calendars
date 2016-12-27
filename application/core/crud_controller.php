@@ -14,7 +14,7 @@ class Crud_Controller extends Controller{
 	function action_index()
 	{	
 		$user = $this->google->get_user();
-		$data = $this->model->get_data($user['id']);
+		$data = $this->model->get_data($user['id'], $user['email']);
 		$this->view->generate($this->view_file_name, 'template_view.php', $data);
 	}
 	

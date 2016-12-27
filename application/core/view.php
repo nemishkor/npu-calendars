@@ -19,7 +19,7 @@ class View
 		$widget_file = 'application/widgets/' . $name . '.php';
 		if(file_exists($widget_file)){
 			/** @noinspection PhpIncludeInspection */
-			include($widget_file);
+			include_once($widget_file);
 			$widget_name = 'Widget_' . ucfirst($name);
 			$widget = new $widget_name($params, $this->registry);
 			return $widget->display();

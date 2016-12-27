@@ -7,7 +7,7 @@ class Model_Groups extends Model
 		parent::__construct($registry, $table_name);
 	}
 	
-	function get_data($user_id){ // override default data for index page
+	function get_data($user_id, $user_email){ // override default data for index page
 		$query = "SELECT * FROM {$this->table_name}";
 		if($user_id)
 			$query .= " WHERE created_by='{$user_id}'";

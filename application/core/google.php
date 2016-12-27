@@ -122,7 +122,8 @@ class Google extends Model{
 		if(!$user_id)
 			return false;
 		$result = $this->db->query("SELECT group_id FROM users WHERE id='{$user_id}'");
-		return $result->fetch_assoc();
+		$result = $result->fetch_assoc();
+		return $result['group_id'];
 	}
 	
 	function get_group_permissions($group_id){

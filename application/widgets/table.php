@@ -46,40 +46,38 @@ class Widget_Table extends Widget{
 					$cell = $row[$column->name];
 					$td_class = 'column-' . $column->name;
 					if(isset($this->params['columnClass'][$column->name]))
-						$td_class .= ' ' . $this->params['columnClass'][$column->name];	
+						$td_class .= ' ' . $this->params['columnClass'][$column->name];
 					if(isset($this->params['hiddenColumn']) && in_array($column->name, $this->params['hiddenColumn']))
-						$td_class .= ' uk-hidden';			
+						$td_class .= ' uk-hidden';
 					if($column->name == 'name'){
 						if(isset($row['link']))
 							$output .= '<td class="' . $td_class . '"><a data-uk-tooltip title="Редагувати" href="' . $row['link'] . '">' . $cell . '</a></td>';
 						else
 							$output .= '<td data-uk-tooltip title="Ви не маєте прав на редагування" class="' . $td_class . '">' . $cell . '</td>';
-					} else				
-					if($column->name == 'institute'){
+					} else if($column->name == 'institute'){
 						if(isset($cell['link']))
 							$output .= '<td class="' . $td_class . '"><a data-uk-tooltip title="Редагувати" href="' . $cell['link'] . '">' . $cell['name'] . '</a></td>';
 						else
 							$output .= '<td data-uk-tooltip title="Ви не маєте прав на редагування" class="' . $td_class . '">' . $cell['name'] . '</td>';
-					} else				
-					if($column->name == 'trashed'){
+					} else if($column->name == 'trashed'){
 						$td_class .= ' trash-' . $cell;
 						$output .= '<td class="' . $td_class . '">' . $cell . '</td>';
-					} else		
-					if($column->name == 'published'){
+					} else if($column->name == 'published'){
 						$icon = ($cell == '0') ? 'uk-icon-close uk-text-danger' : 'uk-icon-check';
 						$output .= '<td class="' . $td_class . '"><i class="' . $icon . '"></i></td>';
-					} else				
-					if($column->name == 'gender'){
+					} else if($column->name == 'gender'){
 						$icon = ($cell == 'm') ? 'uk-icon-mars' : 'uk-icon-venus';
 						$output .= '<td class="' . $td_class . '"><i class="' . $icon . '"></i></td>';
-					} else				
-					if($column->name == 'url' || $column->name == 'link')
-						$output .= '<td class="' . $td_class . '"><a href="'.$cell.'" target="_blank"><i class="uk-icon-external-link"></i> '.$cell.'</a></td>';
-					else if($column->name == 'events'){
+					} else if($column->name == 'url' || $column->name == 'link'){
+						$output .= '<td class="' . $td_class . '"><a href="' . $cell . '" target="_blank"><i class="uk-icon-external-link"></i> ' . $cell . '</a></td>';
+					} else if($column->name == 'events'){
 						$output .= '<td class="' . $td_class . '">' . $this->display_events($cell) . '</td>';
 					} else if($column->name == 'g_calendars'){
 						$cell_text = ($cell) ? '<span class="uk-text-success"><i class="uk-icon-check"></i></span>' : '<span><i class="uk-icon-close"></i></span>';
                         $output .= '<td class="' . $td_class . '">' . $cell_text . '</td>';
+					} else if($column->name == 'full_access'){
+						$full_access = json_decode($cell);
+						$output .= '<td class="' . $td_class . '">' . implode(', ', $full_access) . '</td>';
 					} else
 						$output .= '<td class="' . $td_class . '">' . $cell . '</td>';
 				}
