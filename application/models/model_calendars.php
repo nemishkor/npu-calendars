@@ -45,6 +45,19 @@ class Model_Calendars extends Model
 				$data['user_calendars']['user_name'] = $user_name['name'];
 			}
 		}
+		if($user_id){
+			$query = "SELECT t.*,u.full_access FROM {$this->table_name} t JOIN users u ON t.created_by=u.id";
+			$query .= " WHERE u.full_access LIKE '%{$user_email}%'";
+			$query .= " ORDER BY t.id DESC";
+			$result = $this->db->query($query);
+			$shared_items  = array();
+			while ($row = $result->fetch_assoc()){
+				$row['link'] = $this->registry['host'] . $this->registry['controller_name'] . '/edit?id=' . $row['id'];
+				$shared_items[] = $row;
+			}
+			$data['shared_fields'] = $result->fetch_fields();
+			$data['shared_items'] = $shared_items;
+		}
 		return $data;
 	}
 
@@ -175,72 +188,110 @@ class Model_Calendars extends Model
 	function get_edit_item($id = null){
 		$google = $this->registry['google'];
 		$user = $google->get_user();
-		// get auditories
-		$query = "SELECT * FROM auditories WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
-		$auditories_result = $this->db->query($query);
-		$auditories = array();
-		while($row = $auditories_result->fetch_assoc()){
-			$auditories[] = $row;
-		}
-		// get courses
-		$query = "SELECT * FROM courses WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
-		$courses_result = $this->db->query($query);
-		$courses = array();
-		while($row = $courses_result->fetch_assoc()){
-			$courses[] = $row;
-		}
-		// get groups
-		$query = "SELECT * FROM groups WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
-		$groups_result = $this->db->query($query);
-		$groups = array();
-		while($row = $groups_result->fetch_assoc()){
-			$groups[] = $row;
-		}
-		// get institutes
-		$query = "SELECT * FROM institutes WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
-		$institutes_result = $this->db->query($query);
-		$institutes = array();
-		while($row = $institutes_result->fetch_assoc()){
-			$institutes[] = $row;
-		}
-		// get lectors
-		$query = "SELECT * FROM lectors WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
-		$lectors_result = $this->db->query($query);
-		$lectors = array();
-		while($row = $lectors_result->fetch_assoc()){
-			$lectors[] = $row;
-		}
-		
-		$data = array(
-			'auditories'=> $auditories,
-			'courses'	=> $courses,
-			'groups'	=> $groups,
-			'institutes'=> $institutes,
-			'lectors'	=> $lectors,
-			'params'	=> json_decode($user['params']),
-			'timezones' => $this->get_timezones()
-		);
-		if($id == null){
-			$data['calendar'] = array(
-                'name'		=> '',
-                'published'	=> '1',
-                'id'		=> '',
-				'timezone'	=> null,
-                'start_date'=> date('Y') . '-09-01',
-                'end_date'	=> date('Y') . '-05-31',
-            );
+
+		$query = "SELECT t.created_by,u.full_access FROM {$this->table_name} t JOIN users u ON t.created_by=u.id WHERE t.id={$id}";
+		$result = $this->db->query($query);
+		$result = $result->fetch_assoc();
+		if($user['id'] == $result['created_by'] || stripos($result['full_access'], $user['email']) !== false){
+			$access = $result;
+			// get auditories
+			$query             = "SELECT * FROM auditories WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
+			$auditories        = array();
+			$auditories_result = $this->db->query($query);
+			while ($row = $auditories_result->fetch_assoc()) {
+				$auditories[] = $row;
+			}
+			$query = "SELECT a.* FROM auditories a JOIN users u ON a.created_by=u.id WHERE a.published='1' AND a.trashed='0' AND u.full_access LIKE '%{$user['email']}%' ORDER BY name ASC";
+			$auditories_result = $this->db->query($query);
+			while ($row = $auditories_result->fetch_assoc()) {
+				$auditories[] = $row;
+			}
+			// get courses
+			$query          = "SELECT * FROM courses WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
+			$courses        = array();
+			$courses_result = $this->db->query($query);
+			while ($row = $courses_result->fetch_assoc()) {
+				$courses[] = $row;
+			}
+			$query = "SELECT a.* FROM courses a JOIN users u ON a.created_by=u.id WHERE a.published='1' AND a.trashed='0' AND u.full_access LIKE '%{$user['email']}%' ORDER BY name ASC";
+			$courses_result = $this->db->query($query);
+			while ($row = $courses_result->fetch_assoc()) {
+				$courses[] = $row;
+			}
+			// get groups
+			$query         = "SELECT * FROM groups WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
+			$groups        = array();
+			$groups_result = $this->db->query($query);
+			while ($row = $groups_result->fetch_assoc()) {
+				$groups[] = $row;
+			}
+			$query = "SELECT a.* FROM groups a JOIN users u ON a.created_by=u.id WHERE a.published='1' AND a.trashed='0' AND u.full_access LIKE '%{$user['email']}%' ORDER BY name ASC";
+			$groups_result = $this->db->query($query);
+			while ($row = $groups_result->fetch_assoc()) {
+				$groups[] = $row;
+			}
+			// get institutes
+			$query             = "SELECT * FROM institutes WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
+			$institutes        = array();
+			$institutes_result = $this->db->query($query);
+			while ($row = $institutes_result->fetch_assoc()) {
+				$institutes[] = $row;
+			}
+			$query = "SELECT a.* FROM institutes a JOIN users u ON a.created_by=u.id WHERE a.published='1' AND a.trashed='0' AND u.full_access LIKE '%{$user['email']}%' ORDER BY name ASC";
+			$institutes_result = $this->db->query($query);
+			while ($row = $institutes_result->fetch_assoc()) {
+				$institutes[] = $row;
+			}
+			// get lectors
+			$query          = "SELECT * FROM lectors WHERE published='1' AND trashed='0' AND created_by='{$user['id']}' ORDER BY name ASC";
+			$lectors        = array();
+			$lectors_result = $this->db->query($query);
+			while ($row = $lectors_result->fetch_assoc()) {
+				$lectors[] = $row;
+			}
+			$query = "SELECT a.* FROM lectors a JOIN users u ON a.created_by=u.id WHERE a.published='1' AND a.trashed='0' AND u.full_access LIKE '%{$user['email']}%' ORDER BY name ASC";
+			$lectors_result = $this->db->query($query);
+			while ($row = $lectors_result->fetch_assoc()) {
+				$lectors[] = $row;
+			}
+
+			$data = array(
+				'auditories' => $auditories,
+				'courses'    => $courses,
+				'groups'     => $groups,
+				'institutes' => $institutes,
+				'lectors'    => $lectors,
+				'params'     => json_decode($user['params']),
+				'timezones'  => $this->get_timezones(),
+				'access'     => $access
+			);
+			if ($id == null) {
+				$data['calendar'] = array(
+					'name'       => '',
+					'published'  => '1',
+					'id'         => '',
+					'timezone'   => null,
+					'start_date' => date('Y') . '-09-01',
+					'end_date'   => date('Y') . '-05-31',
+				);
+			} else {
+				$data['calendar'] = $this->get_item($id);
+			}
+
+			return $data;
 		} else {
-			$data['calendar'] = $this->get_item($id);
+			$this->registry->set('error', 'Access denied. You cannot view this content =/');
+			return false;
 		}
-		return $data;
+
 	}
 	
 	function get_item($id, $public = null){
-		$query = "SELECT * FROM calendars WHERE id={$id}";
+		$query = "SELECT c.* FROM calendars c JOIN users u ON c.created_by=u.id WHERE c.id={$id}";
 		if(is_null($public)) {
 			$google = $this->registry['google'];
 			$user = $google->get_user();
-			$query .= " AND created_by='{$user[id]}'";
+			$query .= " AND (c.created_by='{$user['id']}' OR u.full_access LIKE '%{$user['email']}%')";
 		}
 		$result = $this->db->query($query);
 		if($result){

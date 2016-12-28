@@ -469,7 +469,7 @@ else
 	<input type="hidden" name="events">
 	<input type="hidden" name="id" value="<?php echo $calendar['id']; ?>">
 	<div class="uk-form-row uk-margin-bottom">
-		<input type="text" name="name" placeholder="Назва" value="<?php echo $calendar['name']; ?>">
+		<input type="text" name="name" placeholder="Назва" class="uk-width-large" value="<?php echo $calendar['name']; ?>">
 		<h6 class="uk-text-muted uk-margin-remove">Не обов'язкове поле</h6>
 	</div>	
 	<div class="uk-form-row">

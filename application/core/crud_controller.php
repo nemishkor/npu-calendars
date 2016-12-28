@@ -3,16 +3,14 @@ class Crud_Controller extends Controller{
 	
 	protected $view_file_name;
 	
-	function __construct($registry)
-	{
+	function __construct($registry){
 		$model_name = 'Model_' . ucfirst($registry['controller_name']);
 		$this->model = new $model_name($registry);
 		$this->view_file_name = strtolower($registry['controller_name']) . '_' . $registry['action_name'] . '_view.php';
 		parent::__construct($registry);
 	}
 		
-	function action_index()
-	{	
+	function action_index(){
 		$user = $this->google->get_user();
 		$data = $this->model->get_data($user['id'], $user['email']);
 		$this->view->generate($this->view_file_name, 'template_view.php', $data);
