@@ -76,7 +76,10 @@ $user = $google->get_user();
 		echo '<p class="uk-alert" data-uk-alert><i class="uk-close uk-close-alert"></i><i class="uk-icon-info"></i> ' . $this->registry['info'] . '</p>';
 		?>
 
-		<?php include 'application/views/'.$content_view; ?>
+		<?php
+		if(!empty($data))
+			include 'application/views/'.$content_view;
+		?>
 
 	</div>
 

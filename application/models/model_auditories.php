@@ -53,19 +53,32 @@ class Model_Auditories extends Model
 	}
 	
 	function get_edit_item($id = null){ // data for edit page
-		if($id)
-			$item = $this->get_item($id);
-		else
-			$item = array( 
-				'published'=>'1',
-				'trashed'=>'0',
-				'created_by'=>$user['id'],
-				'name'=>'', 
-				'institute'=>'-1',
-				'is_new'=>'true'
-				);
-		$data = array('item'=>$item, 'institutes'=>$this->get_institutes());
-		return $data;
+		$google = $this->registry['google'];
+		$user = $google->get_user();
+		if($id) {
+			$query = "SELECT t.created_by,u.full_access FROM {$this->table_name} t JOIN users u ON t.created_by=u.id WHERE t.id={$id}";
+			$result = $this->db->query($query);
+			$result = $result->fetch_assoc();
+			if($user['id'] == $result['created_by'] || stripos($result['full_access'], $user['email']) !== false){
+				$item = $this->get_item($id);
+				$data = array('item' => $item, 'institutes' => $this->get_institutes(), 'access' => $result);
+				return $data;
+			} else {
+				$this->registry->set('error', 'Access denied. You cannot view this content =/');
+				return false;
+			}
+		} else {
+			$item = array(
+				'published'  => '1',
+				'trashed'    => '0',
+				'created_by' => $user['id'],
+				'name'       => '',
+				'institute'  => '-1',
+				'is_new'     => 'true'
+			);
+			$data = array('item' => $item, 'institutes' => $this->get_institutes());
+			return $data;
+		}
 	}
 	
 	function create(){

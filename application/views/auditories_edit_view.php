@@ -15,6 +15,7 @@ $institutes = $data['institutes'];
  * description
  * url
  */
+var_dump($data['access']);
 ?>
 
 <script>
