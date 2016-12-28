@@ -37,7 +37,7 @@ class Model
 			return false;
 	}
 
-	function get_data($user_id, $user_email){ // default data for index page
+	function get_data($user_id, $user_email = null){ // default data for index page
 		$query = "SELECT * FROM {$this->table_name}";
 		if($user_id)
 			$query .= " WHERE created_by='{$user_id}'";
@@ -54,6 +54,19 @@ class Model
 			'fields'=>$result->fetch_fields(),
 			'items'=>$items
 		);
+		if($user_id){
+			$query = "SELECT t.*,u.full_access FROM {$this->table_name} t JOIN users u ON t.created_by=u.id";
+			$query .= " WHERE u.full_access LIKE '%{$user_email}%'";
+			$query .= " ORDER BY t.id DESC";
+			$result = $this->db->query($query);
+			$shared_items  = array();
+			while ($row = $result->fetch_assoc()){
+				$row['link'] = $this->registry['host'] . $this->registry['controller_name'] . '/edit?id=' . $row['id'];
+				$shared_items[] = $row;
+			}
+			$data['shared_fields'] = $result->fetch_fields();
+			$data['shared_items'] = $shared_items;
+		}
 		return $data;
 	}
 	
