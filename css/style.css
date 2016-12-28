@@ -25,8 +25,12 @@
     right: 0;
     bottom: 0;
     overflow: auto;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.75);
     padding: 10px 20px;
+    color: #fff;
+}
+.weeks.fullscreen .colored{
+    color: #444;
 }
 
 .weeks.fullscreen #table-colors-switcher,
@@ -85,6 +89,9 @@
 }
 .table-schedule thead th{
     padding:0;
+}
+.table-schedule thead th div{
+    background-color: #fff;
 }
 .table-schedule.colored thead th div{
     background-color: #00a8e6;
