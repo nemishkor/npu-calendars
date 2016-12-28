@@ -132,10 +132,11 @@ class Widget_Table extends Widget{
 			for($i = 0; $i < 6; $i++){
 				$day = $week[$i];
 				$lessonsCount = 0;
-				foreach($day as $lesson){
-					if($lesson[0] != '' && $lesson[1] != '' && $lesson[2] != '' &&
-						$lesson[0] != null && $lesson[1] != null && $lesson[2] != null)
-						$lessonsCount++;
+				foreach($day as $lessons){
+					foreach ($lessons as $lesson)
+						if($lesson[0] != '' && $lesson[1] != '' && $lesson[2] != '' &&
+							$lesson[0] != null && $lesson[1] != null && $lesson[2] != null)
+							$lessonsCount++;
 				}
 				$class = ($lessonsCount == 0) ? ' uk-text-muted' : '';
 				$output .= '<div class="uk-margin-right uk-float-left' . $class . '">' . $dayNames[$i] . ' - ' . $lessonsCount . '</div>';
