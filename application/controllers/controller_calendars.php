@@ -5,12 +5,11 @@ class Controller_Calendars extends Crud_Controller
 	function action_index()
 	{
 		if(!empty($_POST['created_by']))
-			$user_id = $_POST['created_by'];
+            $data = $this->model->get_data($_POST['created_by'], null);
 		else {
 			$user = $this->google->get_user();
-			$user_id = $user['id'];
+		    $data = $this->model->get_data($user['id'], $user['email']);
 		}
-		$data = $this->model->get_data($user_id);
 		$this->view->generate($this->view_file_name, 'template_view.php', $data);
 	}
 
@@ -261,6 +260,7 @@ class Controller_Calendars extends Crud_Controller
                                 $end .= '12:20:00';
                                 break;
                             case 3:
+                                // BUG O_o ??
                                 $start = '12:30:00';
                                 $end = '13:50:00';
                                 break;

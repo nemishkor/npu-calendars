@@ -11,13 +11,29 @@ if($data){
 	<div class="uk-clearfix"></div>
 	<button class="trash-toggle uk-float-right uk-button" type="button" data-uk-button>Показати/приховати елементи в корзині</button>
 	<div class="uk-clearfix"></div>
+	<h3>Ваші дані</h3>
 	<?php
 	$this->widget('table', array(
-		'data'=>$data, 
-		'hiddenRow'=>array('trashed'=>'1'), 
-		'hiddenColumn'=>array('trashed'), 
-		'columnClass'=>array('id'=>'key'), 
-		'tableClass' => $table_class . ' uk-table uk-table-hover uk-table-striped uk-table-condensed'
+		'data'          => $data,
+		'hiddenRow'     => array('trashed'=>'1'),
+		'hiddenColumn'  => array('trashed'),
+		'columnClass'   => array('id'=>'key'),
+		'tableClass'    => $table_class . ' uk-table uk-table-hover uk-table-striped uk-table-condensed'
+		)
+	);
+	?>
+	<h3>Спільні дані з іншими користувачами</h3>
+	<?php
+	$shared_data = array(
+		'fields' => $data['shared_fields'],
+		'items' => $data['shared_items']
+	);
+	$this->widget('table', array(
+			'data'          => $shared_data,
+			'hiddenRow'     => array('trashed'=>'1'),
+			'hiddenColumn'  => array('trashed'),
+			'columnClass'   => array('id'=>'key'),
+			'tableClass'    => $table_class . ' uk-table uk-table-hover uk-table-striped uk-table-condensed'
 		)
 	);
 	?>

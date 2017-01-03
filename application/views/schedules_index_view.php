@@ -4,17 +4,22 @@
     <?php
     foreach ($data['calendars'] as $calendar){
         ?>
-        <a href="/schedules/view?id=<?php echo $calendar['id']; ?>">
-            <div class="uk-panel uk-panel-box">
-                <h3 class="uk-panel-title uk-margin-bottom-remove"><?php echo $calendar['name']; ?></h3>
-                <p class="uk-margin-top-remove">
-                    Дата створення: <?php echo $calendar['created']; ?><br>
-                    Початкова дата: <?php echo $calendar['start_date']; ?><br>
-                    Кінцева дата: <?php echo $calendar['end_date']; ?><br>
-                    Автор: <?php echo $calendar['user_name']; ?>
-                </p>
+        <div class="schedule-panel uk-panel uk-panel-box">
+            <h3 class="uk-panel-title uk-margin-bottom-remove"><?php echo $calendar['name']; ?></h3>
+            <p class="uk-margin-top-remove">
+                Дата створення: <?php echo $calendar['created']; ?><br>
+                Початкова дата: <?php echo $calendar['start_date']; ?><br>
+                Кінцева дата: <?php echo $calendar['end_date']; ?><br>
+                Автор: <?php echo $calendar['user_name']; ?>
+            </p>
+            <div class="uk-text-center">
+                Відкрити розклад у вигляді<br>
+                <div class="uk-button-group">
+                    <a href="/schedules/table_view?id=<?php echo $calendar['id']; ?>" class="uk-button"><i class="uk-icon-table"></i> таблиці</a>
+                    <a href="/schedules/block_view?id=<?php echo $calendar['id']; ?>" class="uk-button"><i class="uk-icon-th"></i> блоків</a>
+                </div>
             </div>
-        </a>
+        </div>
         <?php
     }
     ?>
@@ -22,11 +27,11 @@
 </div>
 
 <style>
-    .schedule-items a{
+    .schedule-panel{
         display: block;
         transition: .4s all;
     }
-    .schedule-items a:hover{
+    .schedule-panel:hover{
         text-decoration: none;
         transform: scale(1.1);
     }

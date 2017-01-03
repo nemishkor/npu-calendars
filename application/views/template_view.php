@@ -24,6 +24,9 @@ $user = $google->get_user();
 	
 	<script src="/js/components/tooltip.min.js"></script>
 	<link rel="stylesheet" href="/css/components/tooltip.css">
+
+	<script src="/js/components/sticky.min.js"></script>
+	<link rel="stylesheet" href="/css/components/sticky.css">
 	
 	<script src="/js/core/toggle.js"></script>
 	<script src="/js/core/switcher.js"></script>
@@ -73,22 +76,22 @@ $user = $google->get_user();
 		echo '<p class="uk-alert" data-uk-alert><i class="uk-close uk-close-alert"></i><i class="uk-icon-info"></i> ' . $this->registry['info'] . '</p>';
 		?>
 
-		<?php include 'application/views/'.$content_view; ?>
+		<?php
+		if(!empty($data))
+			include 'application/views/'.$content_view;
+		?>
 
 	</div>
 
 	<?php
-	if($user){
-		?>
-		<hr>
-		<div class="uk-container uk-container-center uk-margin uk-text-small uk-text-center uk-text-muted">
-			<a href="/page/changelog">Список змін</a>
-		</div>
-		<?php
-	}
+	include "footer.php";
 	?>
 
-	<?php $this->widget('debug'); ?>
+	<?php
+	$user_group_id = $google->get_user_group_id($user['id']);
+	if($user_group_id == 1 || $user_group_id == 2)
+		$this->widget('debug');
+	?>
 
 </body>
 </html>
