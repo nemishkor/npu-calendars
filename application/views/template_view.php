@@ -77,7 +77,7 @@ $user = $google->get_user();
 		?>
 
 		<?php
-		if(!empty($data))
+		if(!empty($data) || $this->registry['controller_name'] == 'page')
 			include 'application/views/'.$content_view;
 		?>
 

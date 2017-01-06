@@ -1,6 +1,15 @@
 <h1><i class="uk-icon-code"></i> Список змін</h1>
 <div class="uk-margin">
     <dl class="uk-description-list-line">
+        <dt>06.01.17</dt>
+        <dd>
+            <ul>
+                <li>Є можливість поділитися своїми даними із іншими користувачами по email</li>
+                <li>Розклад у вигляді таблиці з повноекранним режимом та фільтрами</li>
+            </ul>
+        </dd>
+    </dl>
+    <dl class="uk-description-list-line">
         <dt>19.09.16</dt>
         <dd>
             <ul>
