@@ -9,10 +9,13 @@ $params = $user['params'];
     <div class="uk-grid">
 		<div class="uk-width-1-2">
 			<div class="uk-form-row">
-				<input type="text" name="name" value="<?php echo $user['name']; ?>" placeholder="Вкажіть Ваше ім'я">
+				Ім'я <input type="text" name="name" value="<?php echo $user['name']; ?>" placeholder="Вкажіть Ваше ім'я">
 			</div>
 			<div class="uk-form-row">
-				<select disabled name="group_id">
+				Навчальний заклад <input type="text" name="organization" value="<?php echo $user['organization']; ?>" placeholder="Вкажіть назву навчального закладу">
+			</div>
+			<div class="uk-form-row">
+				Група <select disabled name="group_id">
 					<option value="<?php echo $user['group_id']; ?>"><?php echo $user['group_name']; ?></option>
 				</select>
 				<i title="Ви не можете змінити свою групу" data-uk-tooltip class="uk-icon-info"></i>

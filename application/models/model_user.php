@@ -11,7 +11,7 @@ class Model_User extends Model{
 		$data = array();
 		$google = $this->registry['google'];
 		$user = $google->get_user();
-		$query = "SELECT u.id,u.email,u.name,u.params,u.full_access,g.id AS group_id,g.name AS group_name FROM {$this->table_name} AS u LEFT JOIN users_groups AS g ON u.group_id=g.id WHERE u.id={$user['id']}";
+		$query = "SELECT u.id,u.email,u.name,u.params,u.full_access,u.organization,g.id AS group_id,g.name AS group_name FROM {$this->table_name} AS u LEFT JOIN users_groups AS g ON u.group_id=g.id WHERE u.id={$user['id']}";
 		$result = $this->db->query($query);
 		$row = $result->fetch_assoc();
 		if($this->registry['action_name'] == 'edit') {
@@ -28,7 +28,7 @@ class Model_User extends Model{
 	
 	function save(){
 		$item = $this->get_item_from_form();
-		$query = "UPDATE {$this->table_name} SET name='{$item['name']}',params='{$item['params']}',full_access='{$item['full_access']}' WHERE id='{$item['id']}'";
+		$query = "UPDATE {$this->table_name} SET name='{$item['name']}',params='{$item['params']}',full_access='{$item['full_access']}',organization='{$item['organization']}' WHERE id='{$item['id']}'";
 		$result = $this->db->query($query);
 		if($result){
 			return $item['id'];
@@ -80,10 +80,11 @@ class Model_User extends Model{
 				unset($full_access[$key]);
 		}
 		$item = array(
-			'id'	=> $user['id'],
-			'name'	=> $_POST['name'],
-			'params'=> json_encode($params),
-			'full_access' => json_encode($full_access)
+			'id'	        => $user['id'],
+			'name'	        => $_POST['name'],
+			'organization'  => $_POST['organization'],
+			'params'        => json_encode($params),
+			'full_access'   => json_encode($full_access)
 		);
 		return $item;
 	}

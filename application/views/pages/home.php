@@ -20,7 +20,7 @@
         <div class="uk-grid uk-grid-divider">
             <div class="uk-width-1-2 uk-text-center uk-width-1-1">
                 <img src="images/student.png">
-                <h3>Ви студент (учень)</h3>
+                <h3>Ви студент чи учень</h3>
                 <a class="uk-button uk-button-large uk-button-primary" href="/schedules/index">Знайти розклад</a>
             </div>
             <div class="uk-width-1-2 uk-text-center">

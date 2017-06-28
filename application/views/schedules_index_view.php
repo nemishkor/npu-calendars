@@ -1,4 +1,9 @@
-<h1><i class="uk-icon-clock-o"></i>&nbsp;Виберіть групу розкладів</h1>
+<h1><i class="uk-icon-clock-o"></i>&nbsp;Виберіть навчальний заклад або підприємство</h1>
+<form class="uk-form">
+    <label>Або знайдіть </label>
+    <input name="s" type="text" class="uk-form-width-large" placeholder="Назва закладу або підприємства">
+    <input type="submit" class="uk-button" value="Знайти">
+</form>
 <div class="uk-panel-space">
     <div class="schedule-items uk-grid">
     <?php
@@ -10,6 +15,7 @@
                 Дата створення: <?php echo $calendar['created']; ?><br>
                 Початкова дата: <?php echo $calendar['start_date']; ?><br>
                 Кінцева дата: <?php echo $calendar['end_date']; ?><br>
+                Навчальний заклад: <?php echo $calendar['organization']; ?><br>
                 Автор: <?php echo $calendar['user_name']; ?>
             </p>
             <div class="uk-text-center">

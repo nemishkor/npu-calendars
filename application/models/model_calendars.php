@@ -147,7 +147,7 @@ class Model_Calendars extends Model
 	}
 
 	function get_public_calendars(){
-		$query = "SELECT c.id,c.name,c.created,c.start_date,c.end_date,u.name as user_name FROM calendars AS c LEFT JOIN users AS u ON c.created_by=u.id WHERE c.published='1' AND c.trashed='0'";
+		$query = "SELECT c.id,c.name,c.created,c.start_date,c.end_date,u.name as user_name,u.organization FROM calendars AS c LEFT JOIN users AS u ON c.created_by=u.id WHERE c.published='1' AND c.trashed='0'";
 		$result = $this->db->query($query);
 		$items = array();
 		while($row = $result->fetch_assoc()){
